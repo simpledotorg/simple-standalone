@@ -1,0 +1,10 @@
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+
+# Module directory
+ethiopia/.terraform/
+playground/.terraform/
+
+# Variable files
+*.tfvars

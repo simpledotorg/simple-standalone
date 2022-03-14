@@ -1,0 +1,5 @@
+---
+- hosts: postgres
+  roles:
+    - { role: postgres, tags: ['postgres'] }
+    - { role: postgres_replication, tags: ['postgres_replication'] }
