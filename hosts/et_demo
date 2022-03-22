@@ -6,13 +6,6 @@ monitoring
 storage
 load_balancing
 
-[all:vars]
-analytics_dashboard_cache_ttl=60
-app_env=demo
-default_country=ET
-deploy_env=ethiopia-demo
-domain_name=simple-demo.moh.gov.et
-
 [postgres:children]
 postgres_primary
 postgres_secondary
