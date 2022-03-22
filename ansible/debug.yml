@@ -1,0 +1,5 @@
+---
+- hosts: all
+  roles:
+    - { role: debug, tags: ['debug'] }
+  remote_user: "{{ deploy_user }}"

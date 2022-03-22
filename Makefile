@@ -34,6 +34,9 @@ init: ##@Setup Install ansible plugins and dependencies
 all: ##@Setup Install simple-server on hosts. Runs the all.yml playbook
 	ansible-playbook --vault-id $(password_file) ansible/$@.yml -i hosts/$(hosts)
 
+debug: ##@Debug Fetch debug information from hosts
+	ansible-playbook --vault-id $(password_file) ansible/debug.yml -i hosts/$(hosts)
+
 deploy: ship restart-passenger ##@Deploy Deploy simple-server/master on hosts.
 
 ship: ##@Deploy Ship simple-server/master to hosts. Runs an ansitrano deploy
