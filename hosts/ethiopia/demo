@@ -1,3 +1,11 @@
+[et_demo:children]
+servers
+postgres
+redis
+monitoring
+storage
+load_balancing
+
 [all:vars]
 analytics_dashboard_cache_ttl=60
 app_env=demo
