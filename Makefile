@@ -27,35 +27,32 @@ help: ##@Miscellaneous Show this help.
 	@perl -e '$(HELP_FUNC)' $(MAKEFILE_LIST)
 
 init: ##@Setup Install ansible plugins and dependencies
-	ansible-galaxy install -r ansible/requirements.yml
-	ansible-galaxy collection install -r ansible/requirements.yml -p ~/.ansible/collections
+	ansible-galaxy install -r requirements.yml
+	ansible-galaxy collection install -r requirements.yml -p ~/.ansible/collections
 	pip install jmespath
 
 all: ##@Setup Install simple-server on hosts. Runs the all.yml playbook
-	ansible-playbook --vault-id $(password_file) ansible/$@.yml -i ansible/hosts/$(hosts)
+	ansible-playbook --vault-id $(password_file) $@.yml -i hosts/$(hosts)
 
 debug: ##@Debug Fetch debug information from hosts
-	ansible-playbook --vault-id $(password_file) ansible/debug.yml -i ansible/hosts/$(hosts)
-
-debug: ##@Debug Fetch debug information from hosts
-	ansible-playbook --vault-id $(password_file) ansible/debug.yml -i hosts/$(hosts)
+	ansible-playbook --vault-id $(password_file) debug.yml -i hosts/$(hosts)
 
 deploy: ship restart-passenger ##@Deploy Deploy simple-server/master on hosts.
 
 ship: ##@Deploy Ship simple-server/master to hosts. Runs an ansitrano deploy
-	ansible-playbook --vault-id $(password_file) ansible/deploy.yml -i ansible/hosts/$(hosts) --extra-vars="ansistrano_git_branch=$(branch)"
+	ansible-playbook --vault-id $(password_file) deploy.yml -i hosts/$(hosts) --extra-vars="ansistrano_git_branch=$(branch)"
 
-update-ssh-keys: ##@Utilities Update ssh keys on boxes. Add keys to `ansible/roles/ssh/` under the appropriate environment
-	ansible-playbook --vault-id $(password_file) ansible/setup.yml -i ansible/hosts/$(hosts) --tags ssh
+update-ssh-keys: ##@Utilities Update ssh keys on boxes. Add keys to `roles/ssh/` under the appropriate environment
+	ansible-playbook --vault-id $(password_file) setup.yml -i hosts/$(hosts) --tags ssh
 
 update-app-config: ##@Utilities Update app config .env file
-	ansible-playbook --vault-id $(password_file) ansible/deploy.yml -i ansible/hosts/$(hosts) --tags update-app-config
+	ansible-playbook --vault-id $(password_file) deploy.yml -i hosts/$(hosts) --tags update-app-config
 
 update-ssl-certs: ##@Utilities Update the SSL certs. Add the appropriate certs under the encrypted ssl-vault.yml
-	ansible-playbook --vault-id $(password_file) ansible/load_balancing.yml -i ansible/hosts/$(hosts) --tags load_balancing
+	ansible-playbook --vault-id $(password_file) load_balancing.yml -i hosts/$(hosts) --tags load_balancing
 
 restart-passenger: ##@Utilities Restart passenger
-	ansible-playbook --vault-id $(password_file) ansible/setup.yml -i ansible/hosts/$(hosts) -l webservers --tags restart-passenger
+	ansible-playbook --vault-id $(password_file) setup.yml -i hosts/$(hosts) -l webservers --tags restart-passenger
 
 restart-sidekiq: ##@Utilities Restart sidekiq
-	ansible-playbook --vault-id $(password_file) ansible/deploy.yml -i ansible/hosts/$(hosts) -l sidekiq --tags restart-sidekiq
+	ansible-playbook --vault-id $(password_file) deploy.yml -i hosts/$(hosts) -l sidekiq --tags restart-sidekiq
