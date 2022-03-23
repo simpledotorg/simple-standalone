@@ -1,9 +1,10 @@
-[all:vars]
-analytics_dashboard_cache_ttl=86400
-app_env=production
-default_country=ET
-deploy_env=ethiopia-production
-domain_name=simple.moh.gov.et
+[ethiopia_production:children]
+servers
+postgres
+redis
+monitoring
+storage
+load_balancing
 
 [postgres:children]
 postgres_primary

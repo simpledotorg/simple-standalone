@@ -1,9 +1,10 @@
-[all:vars]
-analytics_dashboard_cache_ttl=60
-app_env=demo
-default_country=ET
-deploy_env=ethiopia-demo
-domain_name=simple-demo.moh.gov.et
+[ethiopia_demo:children]
+servers
+postgres
+redis
+monitoring
+storage
+load_balancing
 
 [postgres:children]
 postgres_primary
