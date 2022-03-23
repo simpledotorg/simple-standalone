@@ -1,4 +1,4 @@
-[et_production:children]
+[ethiopia_production:children]
 servers
 postgres
 redis
