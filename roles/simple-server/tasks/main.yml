@@ -1,11 +1,5 @@
 # simple server tasks
 ---
-- name: Deploy | Include secrets
-  include_vars:
-    file: "{{ deploy_env }}/secrets.yml"
-    name: secrets
-  tags: update-app-config
-
 - name: Deploy | Create apps directory
   file:
     path: "{{ ansistrano_deploy_to }}/shared"
