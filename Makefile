@@ -51,6 +51,8 @@ update-app-config: ##@Utilities Update app config .env file
 update-ssl-certs: ##@Utilities Update the SSL certs. Add the appropriate certs under the encrypted ssl-vault.yml
 	ansible-playbook --vault-id $(password_file) load_balancing.yml -i hosts/$(hosts) --tags load_balancing
 
+restart: restart-passenger restart-sidekiq ##@Utilities Restart Simple server
+
 restart-passenger: ##@Utilities Restart passenger
 	ansible-playbook --vault-id $(password_file) setup.yml -i hosts/$(hosts) -l webservers --tags restart-passenger
 

@@ -4,5 +4,4 @@
   roles:
     - { role: datadog.datadog, become: true }
   vars_files:
-    - roles/datadog/vars/vault.yml
     - roles/datadog/vars/main.yml
