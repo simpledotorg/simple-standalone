@@ -35,7 +35,7 @@ all: ##@Setup Install simple-server on hosts. Runs the all.yml playbook
 debug: ##@Debug Fetch debug information from hosts
 	ansible-playbook debug.yml -i hosts/$(hosts)
 
-deploy: ship restart-passenger ##@Deploy Deploy simple-server/master on hosts.
+deploy: ship restart ##@Deploy Deploy simple-server/master on hosts.
 
 ship: ##@Deploy Ship simple-server/master to hosts. Runs an ansitrano deploy
 	ansible-playbook deploy.yml -i hosts/$(hosts) --extra-vars="ansistrano_git_branch=$(branch)"
