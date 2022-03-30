@@ -1,7 +1,5 @@
 hosts = sample/playground
-password_file = ~/.vault_password_et
 branch = master
-export ANSIBLE_CONFIG = ansible/ansible.cfg
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
 .PHONY: help init all deploy ship update-ssh-keys update-app-config restart-passenger restart-sidekiq
@@ -32,29 +30,29 @@ init: ##@Setup Install ansible plugins and dependencies
 	pip install jmespath
 
 all: ##@Setup Install simple-server on hosts. Runs the all.yml playbook
-	ansible-playbook --vault-id $(password_file) $@.yml -i hosts/$(hosts)
+	ansible-playbook $@.yml -i hosts/$(hosts)
 
 debug: ##@Debug Fetch debug information from hosts
-	ansible-playbook --vault-id $(password_file) debug.yml -i hosts/$(hosts)
+	ansible-playbook debug.yml -i hosts/$(hosts)
 
 deploy: ship restart-passenger ##@Deploy Deploy simple-server/master on hosts.
 
 ship: ##@Deploy Ship simple-server/master to hosts. Runs an ansitrano deploy
-	ansible-playbook --vault-id $(password_file) deploy.yml -i hosts/$(hosts) --extra-vars="ansistrano_git_branch=$(branch)"
+	ansible-playbook deploy.yml -i hosts/$(hosts) --extra-vars="ansistrano_git_branch=$(branch)"
 
 update-ssh-keys: ##@Utilities Update ssh keys on boxes. Add keys to `roles/ssh/` under the appropriate environment
-	ansible-playbook --vault-id $(password_file) setup.yml -i hosts/$(hosts) --tags ssh
+	ansible-playbook setup.yml -i hosts/$(hosts) --tags ssh
 
 update-app-config: ##@Utilities Update app config .env file
-	ansible-playbook --vault-id $(password_file) deploy.yml -i hosts/$(hosts) --tags update-app-config
+	ansible-playbook deploy.yml -i hosts/$(hosts) --tags update-app-config
 
 update-ssl-certs: ##@Utilities Update the SSL certs. Add the appropriate certs under the encrypted ssl-vault.yml
-	ansible-playbook --vault-id $(password_file) load_balancing.yml -i hosts/$(hosts) --tags load_balancing
+	ansible-playbook load_balancing.yml -i hosts/$(hosts) --tags load_balancing
 
 restart: restart-passenger restart-sidekiq ##@Utilities Restart Simple server
 
 restart-passenger: ##@Utilities Restart passenger
-	ansible-playbook --vault-id $(password_file) setup.yml -i hosts/$(hosts) -l webservers --tags restart-passenger
+	ansible-playbook setup.yml -i hosts/$(hosts) -l webservers --tags restart-passenger
 
 restart-sidekiq: ##@Utilities Restart sidekiq
-	ansible-playbook --vault-id $(password_file) deploy.yml -i hosts/$(hosts) -l sidekiq --tags restart-sidekiq
+	ansible-playbook deploy.yml -i hosts/$(hosts) -l sidekiq --tags restart-sidekiq
