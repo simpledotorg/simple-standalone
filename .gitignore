@@ -2,5 +2,6 @@
 .terraform.tfvars
 .vault_password
 *.hosts
+*.decrypted
 ssh_keys/*
 tmp

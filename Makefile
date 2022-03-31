@@ -35,7 +35,16 @@ all: ##@Setup Install simple-server on hosts. Runs the all.yml playbook
 debug: ##@Debug Fetch debug information from hosts
 	ansible-playbook debug.yml -i hosts/$(hosts)
 
+decrypt: ##@Vault Decrypt vault secrets for a deployment
+	ansible-vault decrypt group_vars/$(hosts)/vault.yml --output group_vars/$(hosts)/vault.yml.decrypted
+
 deploy: ship restart ##@Deploy Deploy simple-server/master on hosts.
+
+edit-vault: ##@Vault Edit vault secrets for a deployment
+	ansible-vault edit group_vars/$(hosts)/vault.yml
+
+encrypt: ##@Vault Encrypt vault secrets for a deployment
+	ansible-vault encrypt group_vars/$(hosts)/vault.yml.decrypted --output group_vars/$(hosts)/vault.yml --encrypt-vault-id $(hosts)
 
 ship: ##@Deploy Ship simple-server/master to hosts. Runs an ansitrano deploy
 	ansible-playbook deploy.yml -i hosts/$(hosts) --extra-vars="ansistrano_git_branch=$(branch)"
