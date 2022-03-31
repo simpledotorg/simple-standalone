@@ -59,3 +59,20 @@ in the inventory. For example, we create an `ethiopia_production` group that cov
 `ethiopia_production` inventory file.
 
 This allows us to centralize the configuration for each deployment target into a single location - `group_vars/<target>`
+
+### Vault ID labels
+
+Ansible supports the assignment of labels to different vault password files. It also allows the label (known as a vault
+ID) to be stored in the header of the encrypted vault file. This allows Ansible to automatically select a vault password
+when decrypting vault files. We use the vault ID feature to simplify vault management in this repository. The following
+touchpoints are involved:
+
+* `ansible.cfg`: A full list of vault IDs per deployment is declared in the Ansible config file
+* Vault passwords: Vault passwords will need to be stored in the developer's home directory with the appropriate
+  filename, as declared in the `ansible.cfg`
+* Makefile: The Makefile includes tasks to edit, decrypt, and encrypt vault files. Since we leverage the convention of
+  vault labels, the only option that needs to be passed to these commands is the deployment name.
+  * `edit-vault`
+  * `decrypt`
+  * `encrypt`
+  * Example: `make edit-vault hosts=ethiopia_demo`
