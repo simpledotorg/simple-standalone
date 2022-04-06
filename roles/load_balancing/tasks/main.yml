@@ -16,10 +16,10 @@
     regexp: 'ENABLED=0'
     replace: 'ENABLED=1'
 
-- name: copy SSL cert files
+- name: copy SSL cert bundles
   copy:
-    dest: "{{ item.key }}"
-    content: "{{ item.value }}"
+    dest: "/etc/ssl/{{ item.key }}.pem"
+    content: "{{ [item.value.certificate_chain, item.value.private_key] | join('\n') }}"
     owner: "root"
     group: "root"
     mode: "u=r,go="
@@ -27,19 +27,9 @@
   no_log: true
   become: true
 
-- name: generate bundled pem files
-  shell: cat {{ item }}.crt {{ item }}.key > {{ item }}.pem
-  with_items: "{{ haproxy_cert_names }}"
-  become: true
-
-- name: delete crt and key files
-  shell: rm {{ item }}.crt {{ item }}.key
-  with_items: "{{ haproxy_cert_names }}"
-  become: true
-
 - name: create crt-list file
   copy:
-    content: "{{ haproxy_cert_names | map('regex_replace', '^(.*)$', '\\1.pem') | join('\n') }}"
+    content: "{{ ['/etc/ssl/'] | product(ssl_cert_files.keys()) | map('join') | join('\n')}}"
     dest: "{{ haproxy_crt_list }}"
   become: true
 
