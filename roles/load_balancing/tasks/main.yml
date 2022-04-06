@@ -16,10 +16,6 @@
     regexp: 'ENABLED=0'
     replace: 'ENABLED=1'
 
-- name: load SSL cert files
-  include_vars: "ssl-vault.yml"
-  no_log: true
-
 - name: copy SSL cert files
   copy:
     dest: "{{ item.key }}"
