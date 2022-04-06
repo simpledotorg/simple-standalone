@@ -23,10 +23,10 @@
 - name: copy SSL cert files
   copy:
     dest: "{{ item.key }}"
-    content: "{{ item.value.content }}"
-    owner: "{{ item.value.owner }}"
-    group: "{{ item.value.group }}"
-    mode: "{{ item.value.mode }}"
+    content: "{{ item.value }}"
+    owner: "root"
+    group: "root"
+    mode: "u=r,go="
   with_dict: "{{ ssl_cert_files }}"
   no_log: true
   become: true
