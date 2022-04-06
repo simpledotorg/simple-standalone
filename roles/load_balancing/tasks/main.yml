@@ -36,6 +36,11 @@
   with_items: "{{ haproxy_cert_names }}"
   become: true
 
+- name: delete crt and key files
+  shell: rm {{ item }}.crt {{ item }}.key
+  with_items: "{{ haproxy_cert_names }}"
+  become: true
+
 - name: create crt-list file
   copy:
     content: "{{ haproxy_cert_names | map('regex_replace', '^(.*)$', '\\1.pem') | join('\n') }}"
