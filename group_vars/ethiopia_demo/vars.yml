@@ -25,6 +25,10 @@ deploy_env: "ethiopia-demo"
 # eg. "demo.simple.org"
 domain_name: "simple-demo.moh.gov.et"
 
+# simple_app_signature
+# The Simple android app signature. It is used to allow devices to link OTP SMSs with the Simple app automatically.
+simple_app_signature: mLvW4P10znH
+
 # ssh_keys
 # A list of SSH keys of developers that require access to the deployment servers.
 # eg.
