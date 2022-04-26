@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'FileUtils'
 require 'erb'
+require 'securerandom'
 
 def new_deployment
   deployment_name = get_deployment_name
@@ -22,6 +23,12 @@ def new_deployment
   vars_template = ERB.new(File.read("#{templates_path}/vars.yml.erb"))
   vars = vars_template.result(binding)
   File.write("#{group_vars_path}/vars.yml", vars)
+
+  # Vault
+  secret_key_base = SecureRandom.hex(128)
+  vault_template = ERB.new(File.read("#{templates_path}/vault.yml.decrypted.erb"))
+  vault = vault_template.result(binding)
+  File.write("#{group_vars_path}/vault.yml.decrypted", vault)
 end
 
 def get_deployment_name

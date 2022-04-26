@@ -1,0 +1,97 @@
+# Alertmanager Slack API URL
+# Slack webhook to send alerts to in case of downtime or other incidents configured in AlertManager
+alertmanager_slack_api_url:
+
+# Database
+# Credentials for the Simple Server database
+# Choose any username and password when setting up a new deployment. Do not change these credentials after initial
+# deployment.
+database:
+  username:
+  password:
+
+# Datadog
+# Datadog API key, used to send application metrics to Datadog (https://www.datadoghq.com/)
+datadog_api_key:
+
+# DHIS2
+# Optional
+# If you wish to integrate Simple with DHIS2, configure the URL of your DHIS2 server, as well as the username and
+# password of an authorized user. When left blank, nothing will break. Simple server will simply not attempt to send any
+# data to DHIS2
+dhis2:
+  url: ""
+  username: ""
+  password: ""
+  version: "2.28"  # This is a hack because the dhis2 gem only goes to 2.28
+
+# Exotel
+# Applicable in India only
+# Exotel credentials, used to place secure calls
+exotel:
+  sid:
+  token:
+  virtual_number:
+
+# Monitoring Dashboard Password
+# Password to access the following monitoring dashboards
+# * Prometheus: Accessible at <your_domain>/prometheus
+# * Grafana: Accessible at <your_domain>/grafana
+# * Alertmanager: Accessible at <your_domain>/alertmanager
+#
+# The username for these dashboards is "admin"
+monitoring_dashboard_password:
+
+# Secret Key Base
+# Rails secret key base, used by Rails to encrypt sensitive information like session cookies, application secrets, etc.
+# Create a new secret_key_base when setting up a new deployment. A 128 character hexadecimal key is a good format.
+secret_key_base: <%= secret_key_base %>
+
+# Sendgrid
+# Credentials for Sendgrid (https://sendgrid.com/), used by Simple server to send emails to users. Emails include:
+# * Reports and downloads
+# * Password reset emails
+sendgrid:
+  username:
+  password:
+
+# Sentry
+# Credentials for Sentry (https://sentry.io/), used for error monitoring
+sentry:
+  dsn:
+  security_reporting_header:
+
+# Twilio
+# Credentials for Twilio (https://twilio.com/), used to send SMSs to patients and users. SMSs include
+# * Patient reminders to return to care
+# * User sign-in OTPs
+twilio:
+  # Primary credentials
+  account_sid:
+  auth_token:
+  phone_number:
+  # Twilio Sandbox credentials, used for testing
+  test_account_sid:
+  test_auth_token:
+
+# SSL Certificates
+# SSL certificates to be installed on the servers. If the deployment is accessible through more than one domain,
+# multiple SSL certificates can be configured here. The format for configuring the certificates is as follows. For each
+# domain, you will need to provide the full certificate chain and the private key:
+# ssl_cert_files:
+#   demo.simple.org:
+#     certificate_chain:
+#       -----BEGIN CERTIFICATE-----
+#       <certificate>
+#       -----END CERTIFICATE-----
+#       -----BEGIN CERTIFICATE-----
+#       <another certificate in the chain>
+#       -----END CERTIFICATE-----
+#     private_key:
+#       -----BEGIN PRIVATE KEY-----
+#       <private key>
+#       -----END PRIVATE KEY-----
+#   test.simple.org:
+#     certificate_chain:
+#     private_key:
+ssl_cert_files:
