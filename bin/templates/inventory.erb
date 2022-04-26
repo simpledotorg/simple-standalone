@@ -1,0 +1,56 @@
+[postgres_primary]
+change-me replication_role=primary
+
+[postgres_secondary]
+change-me replication_role=replica
+
+[webservers]
+change-me
+change-me
+
+[sidekiq]
+change-me
+change-me
+
+[redis_primary]
+change-me
+
+[redis_secondary]
+change-me
+
+[prometheus]
+change-me
+
+[grafana]
+change-me
+
+[storage]
+change-me
+
+[load_balancing]
+change-me
+
+# Server groups. You do not need to change them.
+[<%= deployment_name %>:children]
+servers
+postgres
+redis
+monitoring
+storage
+load_balancing
+
+[postgres:children]
+postgres_primary
+postgres_secondary
+
+[servers:children]
+webservers
+sidekiq
+
+[redis:children]
+redis_primary
+redis_secondary
+
+[monitoring:children]
+prometheus
+grafana
