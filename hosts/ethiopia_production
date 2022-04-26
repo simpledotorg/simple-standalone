@@ -1,24 +1,8 @@
-[ethiopia_production:children]
-servers
-postgres
-redis
-monitoring
-storage
-load_balancing
-
-[postgres:children]
-postgres_primary
-postgres_secondary
-
 [postgres_primary]
 197.156.66.181 replication_role=primary
 
 [postgres_secondary]
 197.156.66.178 replication_role=replica
-
-[servers:children]
-webservers
-sidekiq
 
 [webservers]
 197.156.66.181
@@ -28,19 +12,11 @@ sidekiq
 197.156.66.181
 197.156.66.178
 
-[redis:children]
-redis_primary
-redis_secondary
-
 [redis_primary]
 197.156.66.181
 
 [redis_secondary]
 197.156.66.178
-
-[monitoring:children]
-prometheus
-grafana
 
 [prometheus]
 197.156.66.181
@@ -54,3 +30,28 @@ grafana
 [load_balancing]
 197.156.66.181
 197.156.66.178
+
+# Server groups. You do not need to change them.
+[ethiopia_production:children]
+servers
+postgres
+redis
+monitoring
+storage
+load_balancing
+
+[postgres:children]
+postgres_primary
+postgres_secondary
+
+[servers:children]
+webservers
+sidekiq
+
+[redis:children]
+redis_primary
+redis_secondary
+
+[monitoring:children]
+prometheus
+grafana
