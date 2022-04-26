@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+require 'FileUtils'
+require 'erb'
+
+def new_deployment
+  project_path = File.expand_path("..", File.dirname(__FILE__))
+  templates_path = File.expand_path("bin/templates", project_path)
+  hosts_path = File.expand_path("hosts", project_path)
+  group_vars_path = File.expand_path("group_vars", project_path)
+
+  deployment_name = get_deployment_name
+
+  inventory_template = ERB.new(File.read("#{templates_path}/inventory.erb"))
+  inventory = inventory_template.result(binding)
+  File.write("#{hosts_path}/#{deployment_name}", inventory)
+end
+
+def get_deployment_name
+  puts "Enter the name of the new deployment."
+  puts "The deployment name can only contain letters and underscores, eg: 'test_environment'."
+  print "Deployment name: "
+  deployment_name = gets.chomp
+
+  if deployment_name.match?( /[^a-zA-Z_]/ )
+    puts "The deployment name can only contain letters and underscores. Aborting..."
+    abort
+  end
+
+  if File.exists?("hosts/#{deployment_name}")
+    puts "Deployment name #{deployment_name} already exists. Aborting..."
+    abort
+  end
+
+  deployment_name
+end
+
+new_deployment
