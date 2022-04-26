@@ -1,0 +1,38 @@
+---
+# analytics_dashboard_cache_ttl
+# The amount of time that Simple's realtime reports are cached, in seconds. Set this lower to increase the refresh
+# rate of some reports in the dashboard.
+analytics_dashboard_cache_ttl: 60
+
+# app_env
+# The environment type of the deployment. The app_env is used to appropriately tag APM metrics and error instrumentation
+# eg. "demo" or "production"
+app_env:
+
+# default_country
+# The country that the deployment is in. Several features of the dashboard, like address labels, are configured based on
+# the default_country.
+# Accepted values: "IN", "BD", "ET", "LK"
+default_country:
+
+# deploy_env
+# A unique name for the deployment
+# eg. "ethiopia-demo"
+deploy_env: "<%= deployment_name %>"
+
+# domain_name
+# The domain or subdomain that the deployment will be hosted at
+# eg. "demo.simple.org"
+domain_name:
+
+# simple_app_signature
+# The Simple android app signature. It is used to allow devices to link OTP SMSs with the Simple app automatically.
+simple_app_signature: mLvW4P10znH
+
+# ssh_keys
+# A list of SSH keys of developers that require access to the deployment servers.
+# eg.
+# ssh_keys:
+#   - ssh-rsa AAAAB.....
+#   - ssh-ed25519 AAAAC.....
+ssh_keys:

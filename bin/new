@@ -3,16 +3,25 @@ require 'FileUtils'
 require 'erb'
 
 def new_deployment
+  deployment_name = get_deployment_name
+
   project_path = File.expand_path("..", File.dirname(__FILE__))
   templates_path = File.expand_path("bin/templates", project_path)
   hosts_path = File.expand_path("hosts", project_path)
-  group_vars_path = File.expand_path("group_vars", project_path)
+  group_vars_path = File.expand_path("group_vars/#{deployment_name}", project_path)
 
-  deployment_name = get_deployment_name
-
+  # Ansible inventory file
   inventory_template = ERB.new(File.read("#{templates_path}/inventory.erb"))
   inventory = inventory_template.result(binding)
   File.write("#{hosts_path}/#{deployment_name}", inventory)
+
+  # Group vars directory
+  FileUtils.mkdir(group_vars_path)
+
+  # Vars
+  vars_template = ERB.new(File.read("#{templates_path}/vars.yml.erb"))
+  vars = vars_template.result(binding)
+  File.write("#{group_vars_path}/vars.yml", vars)
 end
 
 def get_deployment_name
