@@ -98,7 +98,7 @@ File.write("#{project_path}/ansible.cfg", ansible_config.join)
 puts
 puts "#{deployment_name} deployment environment initialized!"
 puts "To finish setup, follow these steps"
-puts "- Enter your servers' IP addresses into the Ansible inventory file hosts/#{deployment_name}"
+puts "- If you skipped entering any IP addresses, enter them into your Ansible inventory file hosts/#{deployment_name}"
 puts "- Configure your instance's variables in group_vars/#{deployment_name}/vars.yml"
 puts "- Configure your instance's secrets in group_vars/#{deployment_name}/vault.yml.decrypted"
 puts "- Create an Ansible vault password and place it in a file at ~/.vault_password_#{deployment_name}"
