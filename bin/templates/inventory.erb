@@ -1,34 +1,36 @@
 [postgres_primary]
-change-me replication_role=primary
+<%= postgres_primary %> replication_role=primary
 
 [postgres_secondary]
-change-me replication_role=replica
+<%= postgres_secondary %> replication_role=replica
 
 [webservers]
-change-me
-change-me
+<% web_servers.each do |server| %>
+<%= server %>
+<% end %>
 
 [sidekiq]
-change-me
-change-me
+<% sidekiq_servers.each do |server| %>
+<%= server %>
+<% end %>
 
 [redis_primary]
-change-me
+<%= redis_primary %>
 
 [redis_secondary]
-change-me
+<%= redis_secondary %>
 
 [prometheus]
-change-me
+<%= prometheus %>
 
 [grafana]
-change-me
+<%= grafana %>
 
 [storage]
-change-me
+<%= storage %>
 
 [load_balancing]
-change-me
+<%= load_balancing %>
 
 # Server groups. You do not need to change them.
 [<%= deployment_name %>:children]

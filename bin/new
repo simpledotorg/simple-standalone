@@ -3,11 +3,22 @@ require 'fileutils'
 require 'erb'
 require 'securerandom'
 
+def input(label, default: nil)
+  print "#{label}: "
+  input_string = gets.chomp
+
+  return default if default && input_string.empty?
+
+  input_string
+end
+
+# ----------------------------
+# Fetch deployment information
+# ----------------------------
 # Deployment name
 puts "Enter the name of the new deployment."
 puts "The deployment name can only contain letters and underscores, eg: 'test_environment'."
-print "Deployment name: "
-deployment_name = gets.chomp
+deployment_name = input("Deployment name")
 
 if deployment_name.match?( /[^a-zA-Z_]/ )
   puts "The deployment name can only contain letters and underscores. Aborting..."
@@ -20,11 +31,29 @@ if File.exists?("hosts/#{deployment_name}")
 end
 
 # Domain
+puts
 puts "Enter the domain or subdomain on which you'd like to host your Simple server instance"
 puts "Eg. api.simple.org"
-print "Domain/Subdomain: "
-domain = gets.chomp
+domain = input("Domain/Subdomain")
 
+# IP addresses
+puts
+puts "Enter the public IP addresses of the servers or VMs that will host the following services."
+puts "If you don't have the IP addresses yet, you can leave these fields blank, and configure them later."
+
+postgres_primary = input("Primary postgres database", default: "change-me")
+postgres_secondary = input("Secondary postgres database (hot standby follower)", default: "change-me")
+web_servers = input("Web servers (comma-separated)", default: "change-me,change-me").split(",").map!(&:strip)
+sidekiq_servers = input("Sidekiq background job servers (comma-separated)", default: "change-me,change-me").split(",").map!(&:strip)
+redis_primary = input("Primary Redis cache", default: "change-me")
+redis_secondary = input("Secondary Redis cache (hot standby follower)", default: "change-me")
+prometheus = input("Prometheus (system monitoring tool)", default: "change-me")
+grafana = input("Grafana (dashboards for viewing Prometheus data)", default: "change-me")
+storage = input("Storage of application logs, audit logs, and database backups", default: "change-me")
+load_balancing = input("Load balancer (this server will be the entry point for all incoming web traffic)", default: "change-me")
+# ----------------------------
+# Set up deployment files
+# ----------------------------
 project_path = File.expand_path("..", File.dirname(__FILE__))
 templates_path = File.expand_path("bin/templates", project_path)
 hosts_path = File.expand_path("hosts", project_path)
@@ -63,7 +92,9 @@ ansible_config[vault_identity_index] = "vault_identity_list = #{vault_identities
 
 File.write("#{project_path}/ansible.cfg", ansible_config.join)
 
-# Next steps
+# ----------------------------
+# Print next steps
+# ----------------------------
 puts
 puts "#{deployment_name} deployment environment initialized!"
 puts "To finish setup, follow these steps"
