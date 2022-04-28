@@ -12,6 +12,15 @@ def input(label, default: nil)
   input_string
 end
 
+def input_list(label, default: nil)
+  print "#{label}: "
+  input_string = gets.chomp
+
+  return default if default && input_string.empty?
+
+  input_string.split(",").map!(&:strip)
+end
+
 # ----------------------------
 # Fetch deployment information
 # ----------------------------
@@ -43,8 +52,8 @@ puts "If you don't have the IP addresses yet, you can leave these fields blank, 
 
 postgres_primary = input("Primary postgres database", default: "change-me")
 postgres_secondary = input("Secondary postgres database (hot standby follower)", default: "change-me")
-web_servers = input("Web servers (comma-separated)", default: "change-me,change-me").split(",").map!(&:strip)
-sidekiq_servers = input("Sidekiq background job servers (comma-separated)", default: "change-me,change-me").split(",").map!(&:strip)
+web_servers = input_list("Web servers (comma-separated)", default: ["change-me", "change-me"])
+sidekiq_servers = input_list("Sidekiq background job servers (comma-separated)", default: ["change-me", "change-me"])
 redis_primary = input("Primary Redis cache", default: "change-me")
 redis_secondary = input("Secondary Redis cache (hot standby follower)", default: "change-me")
 prometheus = input("Prometheus (system monitoring tool)", default: "change-me")
