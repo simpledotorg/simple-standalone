@@ -62,6 +62,12 @@ params[:grafana] = input("Grafana (dashboards for viewing Prometheus data)", def
 params[:storage] = input("Storage of application logs, audit logs, and database backups", default: "change-me")
 params[:load_balancing] = input("Load balancer (this server will be the entry point for all incoming web traffic)", default: "change-me")
 
+# Ansible vault password
+puts
+puts "Would you like to generate an Ansible vault password for this deployment? Select No if you already have an Ansible"
+puts "vault password that you plan to use"
+create_ansible_vault_password = input("Generate Ansible vault password? (y/N)") == "y"
+
 # ----------------------------
 # Set up deployment files
 # ----------------------------
@@ -97,17 +103,21 @@ puts "Created #{group_vars_path}/vault.yml.decrypted..."
 # Parse the ansible vault identity list
 #    vault_identity_list = id@path, id@path
 # into a list of vault identities and add a new identity to the end
+vault_password_path = "~/.vault_password_#{params[:deployment_name]}"
 ansible_config = File.readlines("#{project_path}/ansible.cfg")
 vault_identity_index = ansible_config.index {|x| x.start_with?("vault_identity_list")}
 vault_identity_list = ansible_config[vault_identity_index].split("=").last
 vault_identities = vault_identity_list.split(",").map!(&:strip)
-vault_identities.push("#{params[:deployment_name]}@~/.vault_password_#{params[:deployment_name]}")
+vault_identities.push("#{params[:deployment_name]}@#{vault_password_path}")
 
 ansible_config[vault_identity_index] = "vault_identity_list = #{vault_identities.join(", ")}"
 
 File.write("#{project_path}/ansible.cfg", ansible_config.join)
 puts "Updated #{project_path}/ansible.cfg..."
 
+# Ansible vault password
+File.write(File.expand_path(vault_password_path), SecureRandom.alphanumeric(256)) if create_ansible_vault_password
+puts "Created #{File.expand_path(vault_password_path)}..."
 
 # ----------------------------
 # Print next steps
@@ -118,7 +128,7 @@ puts "To finish setup, follow these steps"
 puts "- If you skipped entering any IP addresses, enter them into your Ansible inventory file hosts/#{params[:deployment_name]}"
 puts "- Configure your instance's variables in group_vars/#{params[:deployment_name]}/vars.yml"
 puts "- Configure your instance's secrets in group_vars/#{params[:deployment_name]}/vault.yml.decrypted"
-puts "- Create an Ansible vault password and place it in a file at ~/.vault_password_#{params[:deployment_name]}"
+puts "- Create an Ansible vault password and place it in a file at ~/.vault_password_#{params[:deployment_name]}" unless create_ansible_vault_password
 puts "- Create your vault file by running `make encrypt hosts=#{params[:deployment_name]}`"
 puts
 puts "And you're done! You can then deploy Simple onto your servers with `make all hosts=#{params[:deployment_name]}`"
