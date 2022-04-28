@@ -63,6 +63,7 @@ group_vars_path = File.expand_path("group_vars/#{deployment_name}", project_path
 inventory_template = ERB.new(File.read("#{templates_path}/inventory.erb"))
 inventory = inventory_template.result(binding)
 File.write("#{hosts_path}/#{deployment_name}", inventory)
+puts "Created #{hosts_path}/#{deployment_name}..."
 
 # Group vars directory
 FileUtils.mkdir(group_vars_path)
@@ -71,12 +72,14 @@ FileUtils.mkdir(group_vars_path)
 vars_template = ERB.new(File.read("#{templates_path}/vars.yml.erb"))
 vars = vars_template.result(binding)
 File.write("#{group_vars_path}/vars.yml", vars)
+puts "Created #{group_vars_path}/vars.yml..."
 
 # Vault
 secret_key_base = SecureRandom.hex(128)
 vault_template = ERB.new(File.read("#{templates_path}/vault.yml.decrypted.erb"))
 vault = vault_template.result(binding)
 File.write("#{group_vars_path}/vault.yml.decrypted", vault)
+puts "Created #{group_vars_path}/vault.yml.decrypted..."
 
 # Ansible vault identity list
 # Parse the ansible vault identity list
@@ -91,6 +94,8 @@ vault_identities.push("#{deployment_name}@~/.vault_password_#{deployment_name}")
 ansible_config[vault_identity_index] = "vault_identity_list = #{vault_identities.join(", ")}"
 
 File.write("#{project_path}/ansible.cfg", ansible_config.join)
+puts "Updated #{project_path}/ansible.cfg..."
+
 
 # ----------------------------
 # Print next steps
