@@ -109,4 +109,4 @@ puts "- Configure your instance's secrets in group_vars/#{deployment_name}/vault
 puts "- Create an Ansible vault password and place it in a file at ~/.vault_password_#{deployment_name}"
 puts "- Create your vault file by running `make encrypt hosts=#{deployment_name}`"
 puts
-puts "And you're done! You can then deploy Simple onto your servers with `make all`"
+puts "And you're done! You can then deploy Simple onto your servers with `make all hosts=#{deployment_name}`"
