@@ -1,38 +1,39 @@
 [postgres_primary]
-197.156.66.181 replication_role=primary
+<%= postgres_primary %> replication_role=primary
 
 [postgres_secondary]
-197.156.66.178 replication_role=replica
+<%= postgres_secondary %> replication_role=replica
 
 [webservers]
-197.156.66.181
-197.156.66.178
+<% web_servers.each do |server| %>
+<%= server %>
+<% end %>
 
 [sidekiq]
-197.156.66.181
-197.156.66.178
+<% sidekiq_servers.each do |server| %>
+<%= server %>
+<% end %>
 
 [redis_primary]
-197.156.66.181
+<%= redis_primary %>
 
 [redis_secondary]
-197.156.66.178
+<%= redis_secondary %>
 
 [prometheus]
-197.156.66.181
+<%= prometheus %>
 
 [grafana]
-197.156.66.181
+<%= grafana %>
 
 [storage]
-197.156.66.178
+<%= storage %>
 
 [load_balancing]
-197.156.66.181
-197.156.66.178
+<%= load_balancing %>
 
 # Server groups. You do not need to change them.
-[ethiopia_production:children]
+[<%= deployment_name %>:children]
 servers
 postgres
 redis

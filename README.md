@@ -6,7 +6,19 @@ An Ansible collection for running [Simple Server](https://github.com/simpledotor
 
 ### Add a new deployment
 
-Coming soon...
+You can add a new deployment by running the following command.
+
+```bash
+$ bin/new
+```
+
+This script will prompt you for some key information about your new deployment:
+* Deployment name
+* Deployment domain/subdomain
+* IP addresses of your servers
+
+and generate the necessary files for you. Once complete, the script will provide you with instructions on how to install
+Simple on your new servers.
 
 ### Edit vault secrets
 
