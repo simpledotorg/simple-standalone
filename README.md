@@ -57,6 +57,67 @@ file, and re-encrypt the vault file with:
 $ make encrypt hosts=<deployment>
 ```
 
+## Other Helpful Commands
+
+### Making a deploy
+
+You can deploy the latest updates to Simple to your servers with the following command
+
+```bash
+make deploy hosts=your_deployment_name
+```
+This deploys https://github.com/simpledotorg/simple-server/tree/master to all of your deployment's servers.
+
+### Update SSH keys
+
+To manage the authorized SSH keys that can access your servers,
+
+First, add or remove the appropriate SSH keys from the `group_vars/<your deployment name>/vars.yml` file
+
+Then, run the following command.
+
+```bash
+make update-ssh-keys hosts=your_deployment_name
+```
+
+This will deploy the updated list of SSH keys to your servers. Note that this clears any old keys present on the servers.
+
+### Updating app configuration
+
+Simple has several configuration options, some of which are sensitive. You can find all of Simple's configuration options
+listed and documented in the following files.
+
+* `group_vars/<your deployment name>/vars.yml`
+* `group_vars/<your deployment name>/vault.yml` (see [Edit Vault Secrets](#edit-vault-secrets) to learn how to manage your vault)
+
+To update the configuration of your deployment,
+
+First, update the necessary configurations in your vars or vault file.
+
+Next, run the following command.
+
+```bash
+make update-app-config hosts=your_deployment_name
+```
+
+This will deploy the updated configuration to your servers.
+
+### Restarting Simple
+
+You can restart the entire Simple application with the following command.
+
+```bash
+make restart hosts=your_deployment_name
+```
+
+This restarts Passenger and Sidekiq on all of your servers. You can also restart these services individually if you'd
+like with the following commands.
+
+```bash
+make restart-passenger hosts=your_deployment_name
+make restart-sidekiq hosts=your_deployment_name
+```
+
 ## Developer notes and decisions
 
 ### Environment groups
