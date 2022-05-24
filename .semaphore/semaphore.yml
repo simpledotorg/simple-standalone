@@ -1,0 +1,22 @@
+version: v1.0
+name: Start
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Checkout
+    task:
+      jobs:
+        - name: Checkout
+          commands:
+            - checkout
+promotions:
+  - name: 01. Demo Ethiopia - Update config
+    pipeline_file: update_ethiopia_demo_config.yml
+    auto_promote:
+      when: branch = 'master' AND result = 'passed'
+  - name: 02. Production Ethiopia - Update config
+    pipeline_file: update_ethiopia_production_config.yml
+    auto_promote:
+      when: branch = 'master' AND result = 'passed'
