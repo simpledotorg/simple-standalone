@@ -1,7 +1,7 @@
 ---
 - name: install jemalloc
   apt:
-    pkg: libjemalloc-dev=3.6.0-9ubuntu1
+    pkg: libjemalloc-dev=5.2.1-1ubuntu1
     state: present
   become: true
 

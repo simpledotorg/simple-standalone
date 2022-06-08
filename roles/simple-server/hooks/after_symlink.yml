@@ -2,6 +2,7 @@
 ---
 - name: Fix bundler path for bootboot
   command: sed -i "s#{{ ansistrano_releases_path }}/[0-9,Z]\+/#{{ ansistrano_shared_path }}/#g" {{ ansistrano_shared_path }}/.bundle/plugin/index
+
 - name: Install required gems
   bundler:
     chdir: "{{ ansistrano_release_path.stdout }}"
@@ -13,6 +14,12 @@
 
 - name: precompile assets
   command: "{{ bundle_path }} exec rake assets:precompile"
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+
+- name: load schema
+  command: "{{ bundle_path }} exec rake db:schema:load"
+  run_once: true
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"
 
