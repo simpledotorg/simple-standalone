@@ -1,5 +1,9 @@
 # load balancing tasks
 ---
+- name: add haproxy 2.6 repository
+  apt_repository: repo='ppa:vbernat/haproxy-2.6' state=present update_cache=true
+  become: true
+
 - name: include monitoring variables (ports and secrets)
   include_vars:
     dir: ../../monitoring/vars/
@@ -7,7 +11,6 @@
 - name: install HAProxy
   apt:
     pkg: "haproxy={{ haproxy_version }}"
-    update_cache: yes
   become: true
 
 - name: enable init script
@@ -29,7 +32,7 @@
 
 - name: create crt-list file
   copy:
-    content: "{{ ['/etc/ssl/'] | product(ssl_cert_files.keys()) | map('join') | join('\n')}}"
+    content: "{{ ['/etc/ssl/'] | product(ssl_cert_files.keys()) | map('join') | map('regex_replace', '^(.*)$', '\\1.pem') | join('\n') }}\n"
     dest: "{{ haproxy_crt_list }}"
   become: true
 

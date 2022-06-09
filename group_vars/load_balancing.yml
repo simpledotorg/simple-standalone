@@ -1,5 +1,5 @@
 ---
-haproxy_version: "1.8.*"
+haproxy_version: "2.6.*"
 haproxy_socket: /var/lib/haproxy/stats
 haproxy_chroot: /var/lib/haproxy
 haproxy_user: haproxy
