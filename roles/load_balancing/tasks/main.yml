@@ -29,7 +29,7 @@
 
 - name: create crt-list file
   copy:
-    content: "{{ ['/etc/ssl/'] | product(ssl_cert_files.keys()) | map('join') | join('\n')}}"
+    content: "{{ ['/etc/ssl/'] | product(ssl_cert_files.keys()) | map('join') | map('regex_replace', '^(.*)$', '\\1.pem') | join('\n') }}\n"
     dest: "{{ haproxy_crt_list }}"
   become: true
 
