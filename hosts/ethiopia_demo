@@ -1,35 +1,35 @@
 [postgres_primary]
-134.209.159.59 replication_role=primary
+143.110.240.17 replication_role=primary
 
 [postgres_secondary]
-128.199.25.80 replication_role=replica
+165.232.184.27 replication_role=replica
 
 [webservers]
-134.209.159.59
-128.199.25.80
+143.110.240.17
+165.232.184.27
 
 [sidekiq]
-134.209.159.59
-128.199.25.80
+143.110.240.17
+165.232.184.27
 
 [redis_primary]
-134.209.159.59
+143.110.240.17
 
 [redis_secondary]
-128.199.25.80
+165.232.184.27
 
 [prometheus]
-134.209.159.59
+143.110.240.17
 
 [grafana]
-134.209.159.59
+143.110.240.17
 
 [storage]
-128.199.25.80
+165.232.184.27
 
 [load_balancing]
-134.209.159.59
-128.199.25.80
+143.110.240.17
+165.232.184.27
 
 # Server groups. You do not need to change them.
 [ethiopia_demo:children]

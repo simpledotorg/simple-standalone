@@ -17,7 +17,14 @@
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"
 
+- name: check if schema has been loaded
+  command: |
+    echo "\d+" | PGPASSWORD={{ database.password }} psql -d {{ database_name }} -U {{ database.username }} | grep ar_internal_metadata
+  register: schema_loaded
+  ignore_errors: false
+
 - name: load schema
+  when: schema_loaded is failed
   command: "{{ bundle_path }} exec rake db:schema:load"
   run_once: true
   args:
