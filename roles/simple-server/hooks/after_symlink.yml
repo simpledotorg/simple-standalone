@@ -1,7 +1,13 @@
 # Ansistrano after symlink tasks
 ---
+- name: Check if the shared bundler index file exists
+  stat:
+    path: "{{ ansistrano_shared_path }}/.bundle/plugin/index"
+  register: shared_bundler_index
+
 - name: Fix bundler path for bootboot
   command: sed -i "s#{{ ansistrano_releases_path }}/[0-9,Z]\+/#{{ ansistrano_shared_path }}/#g" {{ ansistrano_shared_path }}/.bundle/plugin/index
+  when: shared_bundler_index.stat.exists
 
 - name: Install required gems
   bundler:
