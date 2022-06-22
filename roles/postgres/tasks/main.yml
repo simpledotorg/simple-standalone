@@ -54,6 +54,13 @@
     state: present
   register: locale_gen_result
 
+- name: Ensure data directory is initialized
+  command: "{{ postgresql_bin_path }}/initdb -D {{ postgresql_data_dir }}"
+  args:
+    creates: "{{ postgresql_data_dir }}"
+  become: true
+  become_user: postgres
+
 - name: Grant the default permisions for pg_hba conf.
   with_items: "{{ postgres.pg_hba }}"
   postgresql_pg_hba:
