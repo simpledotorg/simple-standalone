@@ -51,15 +51,8 @@
   become: true
   become_user: "{{ deploy_user }}"
 
-- name: install ruby
-  shell: rbenv install -s {{ ruby_version }}
-  environment:
-    PATH: "{{ rbenv_root }}/bin:{{ rbenv_root }}/plugins/ruby-builds/bin:{{ ansible_env.PATH }}"
-  become: true
-  become_user: "{{ deploy_user }}"
-
 - name: install ruby 2.7.4
-  shell: rbenv install -s 2.7.4
+  shell: rbenv install -s {{ ruby_version }}
   environment:
     PATH: "{{ rbenv_root }}/bin:{{ rbenv_root }}/plugins/ruby-builds/bin:{{ ansible_env.PATH }}"
   become: true

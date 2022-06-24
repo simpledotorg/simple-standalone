@@ -1,7 +1,14 @@
 # Ansistrano after symlink tasks
 ---
+- name: Check if the shared bundler index file exists
+  stat:
+    path: "{{ ansistrano_shared_path }}/.bundle/plugin/index"
+  register: shared_bundler_index
+
 - name: Fix bundler path for bootboot
   command: sed -i "s#{{ ansistrano_releases_path }}/[0-9,Z]\+/#{{ ansistrano_shared_path }}/#g" {{ ansistrano_shared_path }}/.bundle/plugin/index
+  when: shared_bundler_index.stat.exists
+
 - name: Install required gems
   bundler:
     chdir: "{{ ansistrano_release_path.stdout }}"
@@ -13,6 +20,20 @@
 
 - name: precompile assets
   command: "{{ bundle_path }} exec rake assets:precompile"
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+
+- name: check if schema has been loaded
+  shell: |
+    echo "\d+" | PGPASSWORD={{ database.password | quote }} psql -d {{ database_name | quote }} -U {{ database.username | quote }} | grep ar_internal_metadata
+  register: schema_loaded
+  ignore_errors: true
+  run_once: true
+
+- name: load schema
+  when: schema_loaded.rc != 0
+  command: "{{ bundle_path }} exec rake db:schema:load"
+  run_once: true
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"
 

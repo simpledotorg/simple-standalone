@@ -1,7 +1,6 @@
 ---
 postgres:
   locale: "en_US.UTF-8"
-  database_name: "{{ database_name }}"
   pg_hba:
     - {contype: local, databases: all, users: postgres, method: peer}
     - {contype: host,  databases: all, users: all, source: all, method: md5}
@@ -20,7 +19,7 @@ rsync_dir: "{{ logrotate_dir }}/*.gz"
 rsync_logfile: "{{ logrotate_dir }}/rsync.log"
 rsync_destination_dir: "/home/{{ deploy_user }}/logs/postgres"
 
-prometheus_postgres_dbname: "{{ postgres.database_name }}"
+prometheus_postgres_dbname: "{{ database_name }}"
 backups_dir: "backups/"
 backups_destination_dir: "/home/{{ deploy_user }}/backups/postgres"
 backups_days_to_keep: 14

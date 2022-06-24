@@ -1,12 +1,7 @@
 ---
-- name: Include secrets
-  include_vars:
-    file: "../simple-server/vars/{{ deploy_env }}/secrets.yml"
-    name: secrets
-
 - name: Define postgresql version
   set_fact:
-    postgresql_version: "10"
+    postgresql_version: "14"
   when: postgresql_version is not defined
 
 - name: Define postgresql_daemon.
@@ -26,7 +21,7 @@
 
 - name: add postgresql repositories
   apt_repository:
-    repo: "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
     state: present
   register: postgres_repo
   become: true
@@ -36,7 +31,7 @@
   when: postgres_repo.changed
   become: true
 
-- name: Ensure PostgreSQL 10 dependencies are installed.
+- name: Ensure PostgreSQL dependencies are installed.
   apt:
     pkg:
       - python3-psycopg2
@@ -45,11 +40,11 @@
     state: present
   become: true
 
-- name: Ensure PostgreSQL 10 packages are installed.
+- name: Ensure PostgreSQL 14 packages are installed.
   apt:
     pkg:
-      - postgresql-10
-      - postgresql-contrib-10
+      - postgresql-14
+      - postgresql-contrib-14
     state: present
   become: true
 
@@ -58,6 +53,13 @@
     name: "{{ postgres.locale }}"
     state: present
   register: locale_gen_result
+
+- name: Ensure data directory is initialized
+  command: "{{ postgresql_bin_path }}/initdb -D {{ postgresql_data_dir }}"
+  args:
+    creates: "{{ postgresql_data_dir }}"
+  become: true
+  become_user: postgres
 
 - name: Grant the default permisions for pg_hba conf.
   with_items: "{{ postgres.pg_hba }}"
@@ -83,15 +85,15 @@
 
 - name: Create Postgresql database
   postgresql_db:
-    name: "{{ postgres.database_name }}"
+    name: "{{ database_name }}"
   become: true
   become_user: postgres
 
 - name: Create Postgresql user
   postgresql_user:
-    name: "{{ secrets.postgres.username }}"
-    password: "{{ secrets.postgres.password }}"
-    db: "{{ postgres.database_name }}"
+    name: "{{ database.username }}"
+    password: "{{ database.password }}"
+    db: "{{ database_name }}"
     encrypted: true
     role_attr_flags: 'SUPERUSER'
     priv: 'ALL'
