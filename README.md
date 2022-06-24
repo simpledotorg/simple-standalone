@@ -2,7 +2,17 @@
 
 An Ansible collection for running [Simple Server](https://github.com/simpledotorg/simple-server) on virtual machines.
 
+[Overview of standalone architecture](docs/architecture.md)
+
 ## Getting Started
+
+### Install local requirements
+```bash
+brew install rbenv
+rbenv install 2.7.4
+brew install ansible@2.8.3 gnu-tar
+make init
+```
 
 ### Add a new deployment
 
@@ -19,6 +29,21 @@ This script will prompt you for some key information about your new deployment:
 
 and generate the necessary files for you. Once complete, the script will provide you with instructions on how to install
 Simple on your new servers.
+
+#### Setup SSH on servers
+
+You will need to setup SSH access to a remote user with [NOPASSWD](https://linuxhint.com/setup-sudo-no-password-linux/) sudo access on the servers.
+We recommend using the username `ubuntu`. You can configure this to something else in [`ansible.cfg`](/standalone/ansible/ansible.cfg).
+To setup this user, you can run this on each server:
+```
+$ adduser ubuntu
+$ sudo visudo
+# At the end of the file add
+ubuntu     ALL=(ALL) NOPASSWD:ALL
+```
+Note: AWS ec2 instances already come with an `ubuntu` sudoer.
+
+Setup your SSH keys on the server for the `ubuntu` user. Make sure you can establish an SSH connection to your server as `ubuntu`.
 
 ### Edit vault secrets
 
