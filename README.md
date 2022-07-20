@@ -174,3 +174,24 @@ touchpoints are involved:
   * `decrypt`
   * `encrypt`
   * Example: `make edit-vault hosts=ethiopia_demo`
+
+## Local setup for testing with Vagrant
+
+### Prerequisite
+- [Vagrant](https://www.vagrantup.com/)
+- [Virtualbox](https://www.virtualbox.org/)
+- Get Ansible vault secret from simple server team
+
+### Setup
+- `cd` into Vagrant folder `cd vagrant`
+- Provision Vagrant nodes `vagrant up`
+- Add user and ssh keys, [follow](#setup-ssh-on-servers). Use `vagrant ssh node-01` and `vagrant ssh node-02` commands to ssh into the nodes
+- Install Ansible prerequisites `make init`
+- If required add Ansible vault key to file  `echo '10.10.10.113 simple.example.com' | sudo tee -a /etc/hosts`
+- Apply Ansible roles `make all hosts=local`
+- Add hostname entry `echo`
+- Validate the installation by opening https://simple.example.com, ignore the ssl warning and proceed to advanced
+
+### Destroy
+- `cd` into Vagrant folder `cd vagrant`
+- Destroy Vagrant nodes `vagrant destroy -f`
