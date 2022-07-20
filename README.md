@@ -184,12 +184,12 @@ touchpoints are involved:
 
 ### Setup
 - `cd` into Vagrant folder `cd vagrant`
-- Provision Vagrant nodes `vagrant up`
+- Provision Vagrant nodes `vagrant up`. Note: First time setup might take a while, depending on your internet speed
 - Add user and ssh keys, [follow](#setup-ssh-on-servers). Use `vagrant ssh node-01` and `vagrant ssh node-02` commands to ssh into the nodes
 - Install Ansible prerequisites `make init`
-- If required add Ansible vault key to file  `echo '10.10.10.113 simple.example.com' | sudo tee -a /etc/hosts`
+- If required add Ansible vault secret key to file `echo '<secret>' > ~/.vault_password_et`
 - Apply Ansible roles `make all hosts=local`
-- Add hostname entry `echo`
+- Add hostname entry `echo '10.10.10.113 simple.example.com' | sudo tee -a /etc/hosts`
 - Validate the installation by opening https://simple.example.com, ignore the ssl warning and proceed to advanced
 
 ### Destroy
