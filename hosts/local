@@ -31,8 +31,11 @@
 10.10.10.113
 10.10.10.114
 
+[metabase]
+10.10.10.114
+
 # Server groups. You do not need to change them.
-[ethiopia_demo:children]
+[local:children]
 servers
 postgres
 redis

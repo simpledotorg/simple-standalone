@@ -1,0 +1,7 @@
+---
+- name: configure the metabase server
+  hosts: metabase
+  roles:
+    - role: geerlingguy.java
+    - role: libre_ops.metabase
+  become: true

@@ -7,7 +7,7 @@ analytics_dashboard_cache_ttl: 60
 # app_env
 # The environment type of the deployment. The app_env is used to appropriately tag APM metrics and error instrumentation
 # eg. "demo" or "production"
-app_env: "demo"
+app_env: "local"
 
 # default_country
 # The country that the deployment is in. Several features of the dashboard, like address labels, are configured based on
@@ -18,7 +18,7 @@ default_country: "ET"
 # deploy_env
 # A unique name for the deployment
 # eg. "ethiopia-demo"
-deploy_env: "ethiopia-demo"
+deploy_env: "local"
 
 # domain_name
 # The domain or subdomain that the deployment will be hosted at
