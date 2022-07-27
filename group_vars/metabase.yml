@@ -3,7 +3,6 @@ metabase_version: v0.43.4
 java_packages:
   - openjdk-11-jdk
 use_own_database: true
-metabase_port: 3031
 metabase_host: 0.0.0.0
 metabase_db: "{{ metabase_database_name }}"
 metabase_db_type: postgres
