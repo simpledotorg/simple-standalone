@@ -188,7 +188,7 @@ touchpoints are involved:
 - If required add Ansible vault secret key to file `echo '<secret>' > ~/.vault_password_et`
 - Apply Ansible roles `make all hosts=local`
 - Add hostname entry `echo '10.10.10.113 simple.example.com' | sudo tee -a /etc/hosts`
-- Validate the installation by opening https://simple.example.com, ignore the ssl warning and proceed to advanced
+- Validate the installation by opening https://simple.example.com, ignore the SSL warning and proceed to advanced
 
 ### Destroy
 - `cd` into Vagrant folder `cd vagrant`
