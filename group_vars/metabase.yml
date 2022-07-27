@@ -1,4 +1,5 @@
 ---
+metabase_version: v0.43.4
 java_packages:
   - openjdk-11-jdk
 use_own_database: true
