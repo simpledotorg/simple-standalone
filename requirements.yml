@@ -16,6 +16,8 @@ roles:
   - src: bdellegrazie.nginx_exporter
   - src: datadog.datadog
     version: 4.15.0
+  - src: libre_ops.metabase
+  - src: geerlingguy.java
 
 collections:
   - jonellis.sudoers

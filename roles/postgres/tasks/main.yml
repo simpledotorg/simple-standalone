@@ -100,6 +100,23 @@
   become: true
   become_user: postgres
 
+- name: Create Metabase Postgresql database
+  postgresql_db:
+    name: "{{ metabase_database_name }}"
+  become: true
+  become_user: postgres
+
+- name: Create Metabase Postgresql user
+  postgresql_user:
+    name: "{{ metabase_database.username }}"
+    password: "{{ metabase_database.password }}"
+    db: "{{ metabase_database_name }}"
+    encrypted: true
+    role_attr_flags: NOCREATEDB,NOSUPERUSER
+    priv: 'ALL'
+  become: true
+  become_user: postgres
+
 - name: Allow postgres to accept all connections
   postgresql_set:
     name: listen_addresses
