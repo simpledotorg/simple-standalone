@@ -31,6 +31,9 @@
 197.156.66.181
 197.156.66.178
 
+[metabase]
+197.156.66.178
+
 # Server groups. You do not need to change them.
 [ethiopia_production:children]
 servers
@@ -39,6 +42,7 @@ redis
 monitoring
 storage
 load_balancing
+metabase
 
 [postgres:children]
 postgres_primary
