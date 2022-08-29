@@ -15,7 +15,7 @@ sudo service nginx stop
 sudo service haproxy stop
 ```
 
-Generate a standalone certificate on the server
+Generate a standalone certificate on the server. (for Example, for simple.moh.gov.et domain)
 
 ```bash
 sudo certbot certonly --standalone -d simple.moh.gov.et
@@ -53,14 +53,11 @@ cd ~/simple-standalone
 Decrypt the `vault.yml`
 
 ```bash
-# cd standalone/ansible/roles/load_balancing/vars
 cd group_vars/<deployment>/
-# ansible-vault decrypt --vault-id ~/.vault_password_et ssl-vault.yml
 ansible-vault decrypt --vault-id ~/.vault_password_et vault.yml
 ```
 For Example
 ```bash
-# cd standalone/ansible/roles/load_balancing/vars
 cd group_vars/ethiopia_demo/
 ansible-vault decrypt --vault-id ~/.vault_password_et vault.yml
 ```
@@ -69,7 +66,7 @@ Add(Change) the newly generated fullchain and private key files to the decrypted
 
 ```yml
 ssl_cert_files:
-  simple-demo.moh.gov.et:  '//This is for simple-demo renewal and for the production use the simple.moh.gov.et section:'
+  simple-demo.moh.gov.et:  #'//This is for simple-demo renewal and for the production use the simple.moh.gov.et section:'
     certificate_chain: |
     <Contents of the new fullchain.pem>
   private_key: | 
@@ -98,7 +95,6 @@ Open a pull request in Github with your changes. The Simple team will accept you
 In the meantime, you don't have to wait. You can immediately install the new certificate on Simple Server from the deployment repository.
 
 ```bash
-# make update-ssl-certs hosts=ethiopia/demo
 make update-ssh-keys hosts=<deployment>   
 ```
 For example
