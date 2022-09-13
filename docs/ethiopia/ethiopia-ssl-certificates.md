@@ -82,7 +82,8 @@ Commit and push your updates. **Caution: Be sure to re-encrypt the `vault.yml` b
 cd simple-standalone
 git add group_vars/<deployment>/vault.yml
 git commit -m 'SSL certificate is renewed until date'
-git push yourbranch master
+git push origin HEAD:ssl-renewal # ssl-renewal can be your own remote branch
+# Then send PR to the tech team.
 ```
 
 Open a pull request in Github with your changes. The Simple team will accept your changes in a few days.
