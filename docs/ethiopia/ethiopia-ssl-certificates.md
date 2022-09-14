@@ -15,7 +15,7 @@ sudo service nginx stop
 sudo service haproxy stop
 ```
 
-Generate a standalone certificate on the server
+Generate a standalone certificate on the server. (for Example, for simple.moh.gov.et domain)
 
 ```bash
 sudo certbot certonly --standalone -d simple.moh.gov.et
@@ -40,49 +40,50 @@ cat /etc/letsencrypt/live/simple.moh.gov.et/fullchain.pem
 Fetch the latest updates to the deployment repository.
 
 ```bash
-cd ~/deployment
+cd simple-standalone
 git checkout master
 git pull --rebase origin master
 ```
-
-Decrypt the `ssl-vault.yml`
-
+Or if you don't have the clone of the simple-standalone repo on your local machine, 
 ```bash
-cd standalone/ansible/roles/load_balancing/vars
-ansible-vault decrypt --vault-id ~/.vault_password_et ssl-vault.yml
+git clone https://github.com/simpledotorg/simple-standalone.git
+cd simple-standalone
 ```
 
-Add the new fullchain and private key files to the decrypted ssl-vault.yml
+Edit the `vault.yml` 
+
+For Example
+```bash
+make edit-vault hosts=ethiopia_demo
+# make sure you are on simple-standalone directory
+```
+
+Add(Change) the newly generated fullchain and private key files to the decrypted vault.yml
 
 ```yml
 ssl_cert_files:
-  /etc/ssl/simple.moh.gov.et.crt:
-    owner: root
-    group: root
-    mode: "u=r,go="
-    content: |
+  simple-demo.moh.gov.et:  #'//This is for simple-demo renewal and for the production use the simple.moh.gov.et section:'
+    certificate_chain: |
     <Contents of the new fullchain.pem>
-  /etc/ssl/simple.moh.gov.et.key:
-    owner: root
-    group: root
-    mode: "u=r,go="
-    content: |
-    <Contents of the new privkey.pem>
+  private_key: | 
+    <Contents of the new privkey.pem> 
 ```
 
-Re-encrypt the `ssl-vault.yml`
+alternatively you can decript and encript  the `vault.yml`
 
 ```bash
-ansible-vault encrypt --vault-id ~/.vault_password_et ssl-vault.yml
+ansible-vault decrypt --vault-id ~/.vault_password_et vault.yml
+# Edit what you like and encrypt again
+ansible-vault encrypt --vault-id ~/.vault_password_et vault.yml
 ```
-
-Commit and push your updates. **Caution: Be sure to re-encrypt the `ssl-vault.yml` before commiting your changes!**
+Commit and push your updates. **Caution: Be sure to re-encrypt the `vault.yml` before commiting your changes!**
 
 ```bash
-cd ~/deployment
-git add standalone/ansible/roles/load_balancing/vars/ssl-vault.yml
-git commit -m 'Update SSL certificate'
-git push siraj master
+cd simple-standalone
+git add group_vars/<deployment>/vault.yml
+git commit -m 'SSL certificate is renewed until date'
+git push origin HEAD:ssl-renewal # ssl-renewal can be your own remote branch
+# Then send PR to the tech team.
 ```
 
 Open a pull request in Github with your changes. The Simple team will accept your changes in a few days.
@@ -92,5 +93,9 @@ Open a pull request in Github with your changes. The Simple team will accept you
 In the meantime, you don't have to wait. You can immediately install the new certificate on Simple Server from the deployment repository.
 
 ```bash
-make update-ssl-certs hosts=ethiopia/demo
+make update-ssl-certs hosts=<deployment>   
+```
+For example
+```
+make update-ssl-certs hosts=ethiopia_production
 ```
