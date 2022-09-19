@@ -52,14 +52,14 @@
   become_user: "{{ deploy_user }}"
 
 - name: install ruby 2.7.4
-  shell: rbenv install -s {{ ruby_version }}
+  shell: rbenv install -s 2.7.4
   environment:
     PATH: "{{ rbenv_root }}/bin:{{ rbenv_root }}/plugins/ruby-builds/bin:{{ ansible_env.PATH }}"
   become: true
   become_user: deploy
 
 - name: Set global ruby version
-  shell: rbenv global {{ ruby_version }}
+  shell: rbenv global 2.7.4
   environment:
     PATH: "/home/{{ deploy_user }}/.rbenv/bin:/home/{{ deploy_user }}/.rbenv/plugins/ruby-builds/bin:{{ ansible_env.PATH }}"
   become: true
@@ -86,3 +86,8 @@
   shell: ~/.rbenv/shims/gem install bundler -v {{ bundler_version }}
   become: true
   become_user: "{{ deploy_user }}"
+
+- name: update system gems
+  shell: ~/.rbenv/shims/gem update --system
+  become: true
+  become_user: deploy
