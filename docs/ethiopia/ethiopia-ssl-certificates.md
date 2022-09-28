@@ -72,6 +72,7 @@ ssl_cert_files:
 alternatively you can decript and encript  the `vault.yml`
 
 ```bash
+cd simple-standalone/group_vars/<deployment>/ # cd simple-standalone/group_vars/ethiopia_demo
 ansible-vault decrypt --vault-id ~/.vault_password_et vault.yml
 # Edit what you like and encrypt again
 ansible-vault encrypt --vault-id ~/.vault_password_et vault.yml
@@ -93,6 +94,7 @@ Open a pull request in Github with your changes. The Simple team will accept you
 In the meantime, you don't have to wait. You can immediately install the new certificate on Simple Server from the deployment repository.
 
 ```bash
+cd simple-standalone
 make update-ssl-certs hosts=<deployment>   
 ```
 For example
