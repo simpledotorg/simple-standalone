@@ -10,7 +10,7 @@ An Ansible collection for running [Simple Server](https://github.com/simpledotor
 ```bash
 brew install rbenv
 rbenv install 2.7.4
-brew install ansible@2.8.3 gnu-tar
+brew install ansible@2.8 gnu-tar
 make init
 ```
 
