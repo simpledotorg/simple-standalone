@@ -19,6 +19,7 @@
       - build-essential
       - cron
       - fail2ban
+      - fwupd
       - git-core
       - htop
       - less
