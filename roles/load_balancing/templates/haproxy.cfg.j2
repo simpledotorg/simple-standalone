@@ -100,7 +100,7 @@ backend letsencrypt-backend
 
 {% if haproxy_stats_enable %}
 listen stats
-    bind *:{{ haproxy_stats_port }} ssl crt-list {{ haproxy_crt_list }}
+    bind *:{{ haproxy_stats_port }} ssl crt /etc/haproxy/certs/{{ domain_name }}.pem
     mode http
 
     stats enable

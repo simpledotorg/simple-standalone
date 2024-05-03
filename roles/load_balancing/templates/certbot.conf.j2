@@ -1,0 +1,14 @@
+# renew_before_expiry = 30 days
+version = 0.40.0
+archive_dir = /etc/letsencrypt/archive/{{ domain_name }}
+cert = /etc/letsencrypt/live/{{ domain_name }}/cert.pem
+privkey = /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
+chain = /etc/letsencrypt/live/{{ domain_name }}/chain.pem
+fullchain = /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+
+# Options used in the renewal process
+[renewalparams]
+account = 893d51997097170f11cbeee5bc0931b4
+authenticator = standalone
+server = https://acme-v02.api.letsencrypt.org/directory
+http01_port = 54321

@@ -47,6 +47,65 @@
     proto: tcp
   become: true
 
+- name: install certbot
+  apt:
+    name: certbot
+    state: present
+  become: true
+
+- name: get the SSL certificate
+  command:
+    cmd: certbot certonly --standalone -d {{ domain_name }} --non-interactive --agree-tos --email {{ monitoring_email }}
+    # Run only if the cert is not present in the first run
+    # The renewal is done by the cron job
+    creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+  become: true
+
+- name: create certbot renewal config directory
+  file:
+    path: /etc/letsencrypt/renewal
+    state: directory
+    mode: 0755
+  become: true
+
+- name: create certbot config
+  template:
+    src: certbot.conf.j2
+    dest: /etc/letsencrypt/renewal/{{ domain_name }}.conf
+    mode: 0755
+  become: true
+
+- name: create haproxy cert directory
+  file:
+    path: /etc/haproxy/certs
+    state: directory
+    mode: 0755
+  become: true
+
+- name: install ssl renew script
+  template:
+    src: ssl_renew.sh.j2
+    dest: /usr/local/bin/ssl_renew.sh
+    mode: 0755
+  become: true
+
+- name: run renewal script
+  command:
+    cmd: /usr/local/bin/ssl_renew.sh
+    # Run only if the cert is not present in the first run
+    # The renewal is done by the cron job
+    creates: /etc/haproxy/certs/{{ domain_name }}.pem
+  become: true
+
+- name: create cron job for SSL renewal
+  cron:
+    name: "renew_ssl"
+    job: "/usr/bin/certbot renew --renew-hook \"/usr/local/bin/renew.sh\" >> /var/log/le-renewal.log"
+    minute: "30"
+    hour: "2"
+    user: root
+  become: true
+
 - name: restart haproxy
   service:
     name: haproxy
