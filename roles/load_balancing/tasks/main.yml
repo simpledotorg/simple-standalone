@@ -19,23 +19,6 @@
     regexp: 'ENABLED=0'
     replace: 'ENABLED=1'
 
-- name: copy SSL cert bundles
-  copy:
-    dest: "/etc/ssl/{{ item.key }}.pem"
-    content: "{{ [item.value.certificate_chain, item.value.private_key] | join('\n') }}"
-    owner: "root"
-    group: "root"
-    mode: "u=r,go="
-  with_dict: "{{ ssl_cert_files }}"
-  no_log: true
-  become: true
-
-- name: create crt-list file
-  copy:
-    content: "{{ ['/etc/ssl/'] | product(ssl_cert_files.keys()) | map('join') | map('regex_replace', '^(.*)$', '\\1.pem') | join('\n') }}\n"
-    dest: "{{ haproxy_crt_list }}"
-  become: true
-
 - name: update HAProxy config
   template:
     src: haproxy.cfg.j2
