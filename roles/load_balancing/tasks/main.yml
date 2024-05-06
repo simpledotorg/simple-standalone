@@ -19,23 +19,6 @@
     regexp: 'ENABLED=0'
     replace: 'ENABLED=1'
 
-- name: copy SSL cert bundles
-  copy:
-    dest: "/etc/ssl/{{ item.key }}.pem"
-    content: "{{ [item.value.certificate_chain, item.value.private_key] | join('\n') }}"
-    owner: "root"
-    group: "root"
-    mode: "u=r,go="
-  with_dict: "{{ ssl_cert_files }}"
-  no_log: true
-  become: true
-
-- name: create crt-list file
-  copy:
-    content: "{{ ['/etc/ssl/'] | product(ssl_cert_files.keys()) | map('join') | map('regex_replace', '^(.*)$', '\\1.pem') | join('\n') }}\n"
-    dest: "{{ haproxy_crt_list }}"
-  become: true
-
 - name: update HAProxy config
   template:
     src: haproxy.cfg.j2
@@ -62,6 +45,58 @@
     rule: allow
     port: "{{ haproxy_stats_port }}"
     proto: tcp
+  become: true
+
+- name: install certbot
+  apt:
+    name: certbot
+    state: present
+  become: true
+
+- name: get the SSL certificate
+  command:
+    cmd: certbot certonly --standalone -d {{ domain_name }} --non-interactive --agree-tos --email {{ monitoring_email }}
+    # Run only if the cert is not present in the first run
+    # The renewal is done by the cron job
+    creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+  become: true
+
+- name: add http01_port to renewalparams section of the letsencrypt renewal config
+  ansible.builtin.lineinfile:
+    path: /etc/letsencrypt/renewal/{{ domain_name }}.conf
+    insertafter: '^\[renewalparams\]$'
+    line: 'http01_port = 54321'
+    state: present
+
+- name: create haproxy cert directory
+  file:
+    path: /etc/haproxy/certs
+    state: directory
+    mode: 0755
+  become: true
+
+- name: install ssl renew script
+  template:
+    src: ssl_renew.sh.j2
+    dest: /usr/local/bin/ssl_renew.sh
+    mode: 0755
+  become: true
+
+- name: run renewal script
+  command:
+    cmd: /usr/local/bin/ssl_renew.sh
+    # Run only if the cert is not present in the first run
+    # The renewal is done by the cron job
+    creates: /etc/haproxy/certs/{{ domain_name }}.pem
+  become: true
+
+- name: create cron job for SSL renewal
+  cron:
+    name: "renew_ssl"
+    job: "/usr/bin/certbot renew --renew-hook \"/usr/local/bin/renew.sh\" >> /var/log/le-renewal.log"
+    minute: "30"
+    hour: "2"
+    user: root
   become: true
 
 - name: restart haproxy
