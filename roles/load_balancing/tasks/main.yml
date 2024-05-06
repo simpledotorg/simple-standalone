@@ -61,19 +61,12 @@
     creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
   become: true
 
-- name: create certbot renewal config directory
-  file:
-    path: /etc/letsencrypt/renewal
-    state: directory
-    mode: 0755
-  become: true
-
-- name: create certbot config
-  template:
-    src: certbot.conf.j2
-    dest: /etc/letsencrypt/renewal/{{ domain_name }}.conf
-    mode: 0755
-  become: true
+- name: add http01_port to renewalparams section of the letsencrypt renewal config
+  ansible.builtin.lineinfile:
+    path: /etc/letsencrypt/renewal/{{ domain_name }}.conf
+    insertafter: '^\[renewalparams\]$'
+    line: 'http01_port = 54321'
+    state: present
 
 - name: create haproxy cert directory
   file:
