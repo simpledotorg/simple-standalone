@@ -11,3 +11,6 @@ database_name: "{{ app_env }}-{{ app_name }}-db"
 metabase_database_name: "{{ app_env }}-{{ app_name }}-db-metabase"
 nginx_port: 8008  # Use 8008 (HTTP Alternate) to avoid conflict with HAProxy in case deployment is on a single box
 metabase_port: 3031
+
+# SSL nofications email for letsencrypt
+monitoring_email: "admin@simple.org"
