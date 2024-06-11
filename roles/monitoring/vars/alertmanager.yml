@@ -2,6 +2,7 @@
 alertmanager_web_external_url: "https://{{ domain_name }}/alertmanager"
 alertmanager_template_files: "roles/monitoring/files/alertmanager/templates/*.tmpl"
 alertmanager_receivers:
+  - name: null
   - name: slack
     slack_configs:
       - send_resolved: true
@@ -10,7 +11,7 @@ alertmanager_receivers:
         text: '{% raw %}{{ template "slack-message-description" . }}{% endraw %}'
 
 alertmanager_route:
-  receiver: "slack"
+  receiver: "null"
   routes:
     - match:
         severity: critical
