@@ -29,3 +29,5 @@ ssh_keys:
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINs4J+gofzCDK/vTfeS4D7+ZqxM8X4Ra6021Be069F42 atharva@Atharvas-MBP.Dlink
   # Akshat
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDzfuiVvRj3hffCUM3TyCa4qJ4pQq1e6EsvonfhY9MoXHz0AyyMVEHE/NhF24Gyz/Ij11a9il0GccXAzNCrZefILjeJiVdtmxgNdkgEOqHSl0acxzl9kCyEjFQ1QSglGyW20zdjjl0duIS9L+csOyrRl/YjmahC8wF/6LKxB5YtE3iddzIW23KpvKt87wConMuQ8izCvkT0FvawFOt5K7U4FkkC2CLSufi9fN0+RpzoZQPvJxR3eyvbD1qmjIv1klTHAOgtbJNmDMd4RWaSQBfpdawyc0iucc5jnS35UtmZpJzjPbvQVCOeVAYVb1HiolMQUGgTKYNhTNXmFLMK/Smx akshat.shah@Somebodys-MacBook-Pro.local
+  # Ayushi
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILQQDDf/+T+ZJyONf471CjUPFPa6RPuVh7AtInjXHAlY ayushiagrawal@RTSL-P172G93770.local
