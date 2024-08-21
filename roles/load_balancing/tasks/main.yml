@@ -93,7 +93,7 @@
 - name: create cron job for SSL renewal
   cron:
     name: "renew_ssl"
-    job: "/usr/bin/certbot renew --renew-hook \"/usr/local/bin/renew.sh\" >> /var/log/le-renewal.log"
+    job: "/usr/bin/certbot renew --renew-hook \"/usr/local/bin/ssl_renew.sh\" >> /var/log/le-renewal.log"
     minute: "30"
     hour: "2"
     user: root
