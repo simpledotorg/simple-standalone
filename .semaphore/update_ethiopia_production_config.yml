@@ -9,6 +9,7 @@ blocks:
             - checkout
             - make init
             - make update-app-config hosts=ethiopia_production
+            - make update-ssh-keys hosts=ethiopia_production
       secrets:
         - name: ansible-vault-passwords
         - name: semaphore-deploy-key
