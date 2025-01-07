@@ -4,7 +4,7 @@ replication_config_primary:
   - {name: wal_level, value: replica, regex: '#?wal_level = \w+(\s+#.*)'}
   - {name: max_wal_senders, value: 3, regex: '#?max_wal_senders = \d+(\s+#.*)'}
   - {name: wal_keep_size, value: 1024, regex: '#?wal_keep_size = .*(\s+#.*)'}
-  - {name: hot_standby_feedback, value: on, regex: '^#?hot_standby_feedback = \w+(\s+#.*)'}
+  - {name: hot_standby_feedback, value: 'on', regex: '^#?hot_standby_feedback = \w+(\s+#.*)'}
 replication_config_replica:
-  - {name: hot_standby, value: on, regex: '^#?hot_standby = \w+(\s+#.*)'}
-  - {name: hot_standby_feedback, value: on, regex: '^#?hot_standby_feedback = \w+(\s+#.*)'}
+  - {name: hot_standby, value: 'on', regex: '^#?hot_standby = \w+(\s+#.*)'}
+  - {name: hot_standby_feedback, value: 'on', regex: '^#?hot_standby_feedback = \w+(\s+#.*)'}
