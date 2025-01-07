@@ -2,9 +2,9 @@
 postgres:
   locale: "en_US.UTF-8"
   pg_hba:
-    - {contype: local, databases: all, users: postgres, method: peer}
+    # - {contype: local, databases: all, users: postgres, method: peer}
     - {contype: host,  databases: all, users: all, source: all, method: md5}
-    - {contype: local, databases: all, users: all, source: all, method: md5}
+    # - {contype: local, databases: all, users: all, source: all, method: md5}
 
 postgresql_data_dir: "/var/lib/postgresql/{{ postgresql_version }}/main"
 postgresql_bin_path: "/usr/lib/postgresql/{{ postgresql_version }}/bin"
