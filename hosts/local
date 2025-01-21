@@ -1,38 +1,38 @@
 [postgres_primary]
-10.10.10.113 replication_role=primary
+deploy@mock-et ansible_user=deploy replication_role=primary
 
 [postgres_secondary]
-10.10.10.114 replication_role=replica
+deploy@mock-et-replica ansible_user=deploy replication_role=replica
 
 [webservers]
-10.10.10.113
-10.10.10.114
+deploy@mock-et ansible_user=deploy
+deploy@mock-et-replica ansible_user=deploy
 
 [sidekiq]
-10.10.10.113
-10.10.10.114
+deploy@mock-et ansible_user=deploy
+deploy@mock-et-replica ansible_user=deploy
 
 [redis_primary]
-10.10.10.113
+deploy@mock-et ansible_user=deploy
 
 [redis_secondary]
-10.10.10.114
+deploy@mock-et-replica ansible_user=deploy
 
 [prometheus]
-10.10.10.113
+deploy@mock-et ansible_user=deploy
 
 [grafana]
-10.10.10.113
+deploy@mock-et ansible_user=deploy
 
 [storage]
-10.10.10.114
+deploy@mock-et-replica ansible_user=deploy
 
 [load_balancing]
-10.10.10.113
-10.10.10.114
+deploy@mock-et ansible_user=deploy
+deploy@mock-et-replica ansible_user=deploy
 
 [metabase]
-10.10.10.114
+deploy@mock-et-replica ansible_user=deploy
 
 # Server groups. You do not need to change them.
 [local:children]
