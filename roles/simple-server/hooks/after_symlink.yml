@@ -19,7 +19,7 @@
       - test
 
 - name: precompile assets
-  command: "{{ bundle_path }} exec rake assets:precompile"
+  command: "RAILS_ENV=production ./bin/rails assets:precompile"
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"
 
@@ -32,13 +32,13 @@
 
 - name: load schema
   when: schema_loaded.rc != 0
-  command: "{{ bundle_path }} exec rake db:schema:load"
+  command: "RAILS_ENV=production ./bin/rails db:schema:load"
   run_once: true
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"
 
 - name: migrate the db
-  command: "{{ bundle_path }} exec rake db:migrate:with_data"
+  command: "RAILS_ENV=production ./bin/rails db:migrate:with_data"
   run_once: true
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"
