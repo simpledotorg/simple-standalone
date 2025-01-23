@@ -77,6 +77,11 @@ backend alertmanager
 
 backend metabase
     http-request set-path %[path,regsub(^/metabase/?,/)]
+{% if haproxy_version == '1.4' %}
+    srvtimeout 600s
+{% else %}
+    timeout server 600s
+{% endif %}
 {% for server in groups.metabase %}
     server alertmanager{{ loop.index }} {{ server }}:{{ metabase_port }}
 {% endfor %}
