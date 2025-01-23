@@ -4,22 +4,59 @@
 
 The Simple Server setup managed by this tooling has the following components.
 
-| Component                          | Purpose | Technologies |
-| ---------                          | ------- | ------------ |
-| Primary relational database        | Primary application database | [PostgreSQL](https://www.postgresql.org/) |
-| Secondary relational database      | Follower application database | [PostgreSQL](https://www.postgresql.org/) |
-| Primary non-relational datastore   | Datastore for application caching and background jobs | [Redis](https://redis.io/) |
-| Secondary non-relational datastore | Follower for primary non-relational datastore | [Redis](https://redis.io/) |
-| Web servers                        | Dashboard web application and APIs | [Ruby on Rails](https://rubyonrails.org/)<br>[Passenger](https://www.phusionpassenger.com/) |
-| Background processing servers      | Perform enqueued tasks asynchronously | [Sidekiq](https://github.com/mperham/sidekiq) |
-| Load balancer                      | Route incoming web requests across web servers | [HAProxy](http://www.haproxy.org/) |
-| System health monitoring           | Monitor the system health of all Simple servers | [Prometheus](https://prometheus.io/)<br>[Grafana](https://grafana.com/) |
-| Storage                            | Large storage location for logs and database backups | [`rsync`](https://linux.die.net/man/1/rsync) |
+| Component                          | Purpose                                               | Technologies                                           |
+| ---------                          | -------                                               | ------------                                           |
+| Primary relational database        | Primary application database                          | [PostgreSQL][1]                                        |
+| Secondary relational database      | Follower application database                         | [PostgreSQL][1]                                        |
+| Primary non-relational datastore   | Datastore for application caching and background jobs | [Redis][2]                                             |
+| Secondary non-relational datastore | Follower for primary non-relational datastore         | [Redis][2]                                             |
+| Web servers                        | Dashboard web application and APIs                    | [Ruby on Rails][3]<br>[Passenger][4]<br>[Metabase][10] |
+| Background processing servers      | Perform enqueued tasks asynchronously                 | [Sidekiq][9]                                           |
+| Load balancer                      | Route incoming web requests across web servers        | [HAProxy][5]                                           |
+| System health monitoring           | Monitor the system health of all Simple servers       | [Prometheus][6]<br>[Grafana][8]                        |
+| Storage                            | Large storage location for logs and database backups  | [`rsync`][7]                                           |
 
 ### Topography
 
 These components are arranged in the following topography.
 
-![topography](https://docs.google.com/drawings/d/e/2PACX-1vTr2ryR_vqxAtdNCzKxn1pIdz3b57be8j3iHAVBEDBGstA6jGqOX6deyoXeWBXEk_yzeybFsmrzm5Ww/pub?w=960&amp;h=720)
+```
+                                                         ┌────────────────┐
+                                                         │    replica     │
+                                                         │ non-relational │
+                                                         │     store      │
+                                                         └────────────────┘
+                                                                 │
+                                                                 │
+                                    ┌─────────┐                  │                     ┌────────────┐
+                  ┌──────────┐     ┌─────────┐│          ┌────────────────┐           ┌────────────┐│
+    incoming      │   load   │     │   web   ││          │    primary     │           │ background ││
+    requests  ─── │ balancer │ ─── │ servers ││ ─┬────── │ non-relational │ ──────┬── │ processors ││
+                  │          │     │         │┘  │       │     store      │       │   │            │┘
+       │          └──────────┘     └─────────┘   │       └────────────────┘       │   └────────────┘
+       │                                         │                                │
+       │                                │        │       ┌────────────────┐       │
+┌────────────┐                          │        │       │    primary     │       │
+│   system   │                          │        │       │   relational   │       │
+│ monitoring │                          │        └────── │     store      │ ──────┘
+│            │                          │                └────────────────┘
+└────────────┘                          │                        │
+                                     ┌──────┐                    │
+                                     │ logs │                    │
+                                     └──────┘            ┌────────────────┐
+                                                         │    replica     │
+                                                         │   relational   │
+                                                         │     store      │
+                                                         └────────────────┘
+```
 
-If this image is out-of-date, you can edit it [here](https://docs.google.com/drawings/d/1jHZeW141ivRUAWhHEduwlyasFxNzZ1Nk2V_AQ12w4p8/edit).
+  [1]: https://www.postgresql.org/
+  [2]: https://redis.io/
+  [3]: https://rubyonrails.org/
+  [4]: https://www.phusionpassenger.com/
+  [5]: http://www.haproxy.org/
+  [6]: https://prometheus.io/
+  [7]: https://linux.die.net/man/1/rsync
+  [8]: https://grafana.com/ 
+  [9]: https://github.com/mperham/sidekiq
+  [10]: https://metabase.com/
