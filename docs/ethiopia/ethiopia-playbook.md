@@ -4,8 +4,6 @@
 
 First up, make sure you have the specific Ethiopia private vault key to decrypt the secret configuration and credentials. Ask someone on the Simple team, if you're unsure.
 
-Follow the [standalone](../../standalone/README.md) guide for the remaining steps to complete the self-managed deploy.
-
 Currently, the ET releases are made through [Semaphore](https://resolvetosavelives.semaphoreci.com) in the [Simple Server](https://github.com/simpledotorg/simple-server) project.
 
 There are 2 active environments on Ethiopia.
