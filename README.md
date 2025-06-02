@@ -9,7 +9,7 @@ An Ansible collection for running [Simple Server](https://github.com/simpledotor
 ### Install local requirements
 ```bash
 brew install rbenv
-rbenv install 2.7.8
+rbenv install 2.7.4
 brew install ansible@2.8 gnu-tar
 make init
 ```
