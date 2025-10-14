@@ -51,26 +51,34 @@
   become: true
   become_user: "{{ deploy_user }}"
 
-- name: install ruby
-  shell: rbenv install -s {{ ruby_version }}
-  environment:
-    PATH: "{{ rbenv_root }}/bin:{{ rbenv_root }}/plugins/ruby-build/bin:{{ ansible_env.PATH }}"
-  become: true
-  become_user: deploy
-
-- name: Set global ruby version
-  shell: rbenv global {{ ruby_version }}
-  environment:
-    PATH: "/home/{{ deploy_user }}/.rbenv/bin:/home/{{ deploy_user }}/.rbenv/plugins/ruby-build/bin:{{ ansible_env.PATH }}"
+- name: install Ruby {{ ruby_version }} if not already installed
+  shell: |
+    export RBENV_ROOT="{{ rbenv_root }}"
+    export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/plugins/ruby-build/bin:$PATH"
+    if ! rbenv versions | grep -q "{{ ruby_version }}"; then
+      rbenv install {{ ruby_version }}
+    fi
+    rbenv global {{ ruby_version }}
+    rbenv rehash
   become: true
   become_user: "{{ deploy_user }}"
+  args:
+    executable: /bin/bash
 
-- name: rbenv rehash
-  shell: rbenv rehash
-  environment:
-    PATH: "/home/{{ deploy_user }}/.rbenv/bin:/home/{{ deploy_user }}/.rbenv/plugins/ruby-build/bin:{{ ansible_env.PATH }}"
+- name: print Ruby version
+  shell: |
+    export RBENV_ROOT="{{ rbenv_root }}"
+    export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"
+    ruby -v
+  register: ruby_version_output
   become: true
   become_user: "{{ deploy_user }}"
+  args:
+    executable: /bin/bash
+
+- name: show Ruby version
+  debug:
+    msg: "{{ ruby_version_output.stdout }}"
 
 - name: set up .gemrc
   lineinfile: >
