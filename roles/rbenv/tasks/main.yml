@@ -1,64 +1,67 @@
-# rbenv tasks
 ---
+# rbenv tasks - updated to official repos
 - name: clone rbenv git repo
   git:
-    repo: "https://github.com/sstephenson/rbenv.git"
+    repo: "https://github.com/rbenv/rbenv.git"
     dest: "~/.rbenv"
-    accept_hostkey: "yes"
+    accept_hostkey: yes
+    update: yes
   become: true
   become_user: "{{ deploy_user }}"
 
 - name: include rbenv in $PATH
-  lineinfile: >
-    dest=~/.profile
-    line='export PATH="$HOME/.rbenv/bin:$PATH"'
-    state=present
-    insertafter=EOF
+  lineinfile:
+    dest: "~/.profile"
+    line: 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    state: present
+    insertafter: EOF
   become: true
   become_user: "{{ deploy_user }}"
 
 - name: load rbenv in .profile
-  lineinfile: >
-    dest=~/.profile
-    line='eval "$(rbenv init -)"'
-    state=present
-    insertafter=EOF
+  lineinfile:
+    dest: "~/.profile"
+    line: 'eval "$(rbenv init -)"'
+    state: present
+    insertafter: EOF
   become: true
   become_user: "{{ deploy_user }}"
 
 - name: clone ruby-build git repo
   git:
-    repo: "https://github.com/sstephenson/ruby-build.git"
+    repo: "https://github.com/rbenv/ruby-build.git"
     dest: "~/.rbenv/plugins/ruby-build"
-    accept_hostkey: "yes"
+    accept_hostkey: yes
+    update: yes
   become: true
   become_user: "{{ deploy_user }}"
 
 - name: include ruby-build in $PATH
-  lineinfile: >
-    dest=~/.profile
-    line='export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"'
-    state=present
-    insertafter=EOF
+  lineinfile:
+    dest: "~/.profile"
+    line: 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"'
+    state: present
+    insertafter: EOF
   become: true
   become_user: "{{ deploy_user }}"
 
 - name: clone rbenv-gem-rehash git repo
   git:
-    repo: "https://github.com/sstephenson/rbenv-gem-rehash.git"
+    repo: "https://github.com/rbenv/rbenv-gem-rehash.git"
     dest: "~/.rbenv/plugins/rbenv-gem-rehash"
-    accept_hostkey: "yes"
+    accept_hostkey: yes
+    update: yes
   become: true
   become_user: "{{ deploy_user }}"
 
-- name: install Ruby {{ ruby_version }} if not already installed
+- name: install Ruby 2.7.8 if not already installed
   shell: |
-    export RBENV_ROOT="{{ rbenv_root }}"
+    export RBENV_ROOT="$HOME/.rbenv"
     export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/plugins/ruby-build/bin:$PATH"
-    if ! rbenv versions | grep -q "{{ ruby_version }}"; then
-      rbenv install {{ ruby_version }}
+    if ! rbenv versions | grep -q "2.7.8"; then
+      rbenv install 2.7.8
     fi
-    rbenv global {{ ruby_version }}
+    rbenv global 2.7.8
     rbenv rehash
   become: true
   become_user: "{{ deploy_user }}"
@@ -67,7 +70,7 @@
 
 - name: print Ruby version
   shell: |
-    export RBENV_ROOT="{{ rbenv_root }}"
+    export RBENV_ROOT="$HOME/.rbenv"
     export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"
     ruby -v
   register: ruby_version_output
@@ -81,21 +84,21 @@
     msg: "{{ ruby_version_output.stdout }}"
 
 - name: set up .gemrc
-  lineinfile: >
-    dest=~/.gemrc
-    line='gem: --no-ri --no-rdoc'
-    state=present
-    create=yes
-    insertafter=EOF
+  lineinfile:
+    dest: "~/.gemrc"
+    line: 'gem: --no-ri --no-rdoc'
+    state: present
+    create: yes
+    insertafter: EOF
   become: true
   become_user: "{{ deploy_user }}"
 
-- name: install bundler
-  shell: ~/.rbenv/shims/gem install bundler -v {{ bundler_version }}
+- name: install bundler 2.4.20
+  shell: ~/.rbenv/shims/gem install bundler -v 2.4.20
   become: true
   become_user: "{{ deploy_user }}"
 
 - name: update system gems
   shell: ~/.rbenv/shims/gem update --system
   become: true
-  become_user: deploy
+  become_user: "{{ deploy_user }}"
