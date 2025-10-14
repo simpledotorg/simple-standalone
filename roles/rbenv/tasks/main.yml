@@ -98,11 +98,8 @@
   become: true
   become_user: "{{ deploy_user }}"
 
-- name: update system gems
-  # Disabled because the latest Rubygems version (3.7.x) is incompatible with Ruby 2.7.8.
-  # Running `gem update --system` would fail with:
-  # "rubygems-update requires Ruby version >= 3.2.0. The current ruby version is 2.7.8.225"
-  # If needed, update Rubygems to a version compatible with Ruby 2.7.x instead.
-  # shell: ~/.rbenv/shims/gem update --system  become: true
+- name: update system gems (skipped for Ruby 2.7.8)
+  debug:
+    msg: "Skipping gem update --system because Rubygems 3.7.x requires Ruby >= 3.2"
   become: true
   become_user: "{{ deploy_user }}"
