@@ -12,17 +12,22 @@
 - name: Install required gems
   bundler:
     chdir: "{{ ansistrano_release_path.stdout }}"
-    executable: "{{ bundle_path }}"
+    executable: "~/.rbenv/shims/bundle"
     deployment_mode: yes
     exclude_groups:
       - development
       - test
+  environment:
+    RBENV_ROOT: "/home/{{ deploy_user }}/.rbenv"
+    PATH: "/home/{{ deploy_user }}/.rbenv/bin:/home/{{ deploy_user }}/.rbenv/shims:{{ ansible_env.PATH }}"
 
 - name: precompile assets
-  command: "{{ bundle_path }} exec rails assets:precompile"
+  command: "~/.rbenv/shims/bundle exec rails assets:precompile"
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"
   environment:
+    RBENV_ROOT: "/home/{{ deploy_user }}/.rbenv"
+    PATH: "/home/{{ deploy_user }}/.rbenv/bin:/home/{{ deploy_user }}/.rbenv/shims:{{ ansible_env.PATH }}"
     RAILS_ENV: production
 
 - name: check if schema has been loaded
