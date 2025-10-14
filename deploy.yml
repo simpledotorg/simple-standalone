@@ -1,6 +1,7 @@
 ---
 - hosts: servers
   roles:
+    - { role: rbenv, tags: ['rbenv'] }         
     - { role: simple-server, tags: ['simple-server'] }
     - { role: ansistrano.deploy, tags: ['ansistrano.deploy'] }
   environment:
@@ -8,4 +9,5 @@
   remote_user: "{{ deploy_user }}"
 - hosts: sidekiq
   roles:
+    - { role: rbenv, tags: ['rbenv'] }           
     - { role: sidekiq, tags: ['sidekiq'] }
