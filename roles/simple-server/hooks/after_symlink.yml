@@ -1,7 +1,7 @@
 # Ansistrano after symlink tasks
 - name: Debug current release path
   shell: |
-    echo "Current symlink points to: $(readlink -f {{ ansistrano_current_path }})"
+    echo "Current symlink points to: $(readlink -f {{ ansistrano_release_path }})"
     echo "Release path variable: {{ ansistrano_release_path }}"
   register: release_debug
   run_once: true
@@ -21,7 +21,7 @@
 
 - name: Install required gems
   bundler:
-    chdir: "{{ ansistrano_current_path }}"
+    chdir: "{{ ansistrano_release_path }}"
     executable: "~/.rbenv/shims/bundle"
     deployment_mode: yes
     exclude_groups:
@@ -34,7 +34,7 @@
 - name: precompile assets
   command: "~/.rbenv/shims/bundle exec rails assets:precompile"
   args:
-    chdir: "{{ ansistrano_current_path }}"
+    chdir: "{{ ansistrano_release_path }}"
   environment:
     RBENV_ROOT: "/home/{{ deploy_user }}/.rbenv"
     PATH: "/home/{{ deploy_user }}/.rbenv/bin:/home/{{ deploy_user }}/.rbenv/shims:{{ ansible_env.PATH }}"
@@ -52,7 +52,7 @@
   command: "{{ bundle_path }} exec rails db:schema:load"
   run_once: true
   args:
-    chdir: "{{ ansistrano_current_path }}"
+    chdir: "{{ ansistrano_release_path }}"
   environment:
     RAILS_ENV: production
 
@@ -60,7 +60,7 @@
   command: "{{ bundle_path }} exec rails db:migrate:with_data"
   run_once: true
   args:
-    chdir: "{{ ansistrano_current_path }}"
+    chdir: "{{ ansistrano_release_path }}"
   environment:
     RAILS_ENV: production
 
@@ -68,4 +68,4 @@
   command: "{{ bundle_path }} exec whenever --update-crontab simple-server --set environment=production"
   run_once: true
   args:
-    chdir: "{{ ansistrano_current_path }}"
+    chdir: "{{ ansistrano_release_path }}"
