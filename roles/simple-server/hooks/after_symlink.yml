@@ -21,7 +21,7 @@
 - name: precompile assets
   command: "{{ bundle_path }} exec rails assets:precompile"
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}"
+    chdir: "{{ ansistrano_release_path }}"
   environment:
     RAILS_ENV: production
 
