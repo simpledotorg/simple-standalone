@@ -1,0 +1,5 @@
+---
+patient_scoring_image: "simpledotorg/simple_patient_scoring:main"
+patient_scoring_cron_minute: "0"
+patient_scoring_cron_hour: "0"
+patient_scoring_cron_day: "*/15"

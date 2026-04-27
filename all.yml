@@ -8,3 +8,4 @@
 - import_playbook: monitoring.yml
 - import_playbook: logshipping.yml
 - import_playbook: datadog.yml
+- import_playbook: patient_scoring.yml
