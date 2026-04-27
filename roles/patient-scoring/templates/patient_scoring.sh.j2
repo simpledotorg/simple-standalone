@@ -1,0 +1,42 @@
+#!/bin/bash
+# Patient Scoring Script for {{ deploy_env }}
+# Runs train.sh and scoring.sh inside Docker container
+
+set -e
+
+CONTAINER_NAME="patient-scoring-{{ deploy_env }}"
+IMAGE="{{ patient_scoring_image }}"
+DB_HOST="{{ groups['postgres_primary'] | first }}"
+DB_NAME="{{ database_name }}"
+DB_USER="{{ database.username }}"
+DB_PASSWORD='{{ database.password }}'
+DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}"
+
+echo "$(date): Starting patient scoring job for {{ deploy_env }}"
+
+# Pull latest image
+echo "$(date): Pulling latest image"
+docker pull $IMAGE
+
+# Run train.sh
+echo "$(date): Running train.sh"
+docker run --rm \
+  --name "${CONTAINER_NAME}-train" \
+  --network host \
+  -e DATABASE_URL="${DATABASE_URL}" \
+  $IMAGE \
+  ./train.sh
+
+echo "$(date): train.sh completed"
+
+# Run scoring.sh
+echo "$(date): Running scoring.sh"
+docker run --rm \
+  --name "${CONTAINER_NAME}-scoring" \
+  --network host \
+  -e DATABASE_URL="${DATABASE_URL}" \
+  $IMAGE \
+  ./scoring.sh
+
+echo "$(date): scoring.sh completed"
+echo "$(date): Patient scoring job finished successfully"

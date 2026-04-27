@@ -65,3 +65,6 @@ restart-passenger: ##@Utilities Restart passenger
 
 restart-sidekiq: ##@Utilities Restart sidekiq
 	ansible-playbook deploy.yml -i hosts/$(hosts) -l sidekiq --tags restart-sidekiq
+
+patient-scoring: ##@Setup Setup patient scoring on hosts
+	ansible-playbook patient_scoring.yml -i hosts/$(hosts)
