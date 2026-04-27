@@ -11,8 +11,12 @@ DB_NAME="{{ database_name }}"
 DB_USER="{{ database.username }}"
 DB_PASSWORD='{{ database.password }}'
 DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}"
+DATA_DIR="/home/{{ deploy_user }}/patient-scoring/data"
 
 echo "$(date): Starting patient scoring job for {{ deploy_env }}"
+
+# Create data directory if not exists
+mkdir -p $DATA_DIR
 
 # Pull latest image
 echo "$(date): Pulling latest image"
@@ -23,6 +27,7 @@ echo "$(date): Running train.sh"
 docker run --rm \
   --name "${CONTAINER_NAME}-train" \
   --network host \
+  -v ${DATA_DIR}:/app/data \
   -e DATABASE_URL="${DATABASE_URL}" \
   $IMAGE \
   ./train.sh
@@ -34,6 +39,7 @@ echo "$(date): Running scoring.sh"
 docker run --rm \
   --name "${CONTAINER_NAME}-scoring" \
   --network host \
+  -v ${DATA_DIR}:/app/data \
   -e DATABASE_URL="${DATABASE_URL}" \
   $IMAGE \
   ./scoring.sh

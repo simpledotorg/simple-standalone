@@ -1,5 +1,5 @@
 ---
 - hosts: patient_scoring
+  become: yes
   roles:
     - { role: patient-scoring, tags: ['patient-scoring'] }
-  remote_user: "{{ deploy_user }}"
