@@ -33,6 +33,9 @@
 [metabase]
 197.156.66.178
 
+[patient_scoring]
+197.156.66.181
+
 # Server groups. You do not need to change them.
 [ethiopia_production:children]
 servers

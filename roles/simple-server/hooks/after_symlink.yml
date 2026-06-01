@@ -11,7 +11,7 @@
 
 - name: Install required gems
   bundler:
-    chdir: "{{ ansistrano_release_path.stdout }}"
+    chdir: "{{ ansistrano_release_path }}"
     executable: "{{ bundle_path }}"
     deployment_mode: yes
     exclude_groups:
@@ -37,7 +37,7 @@
   command: "{{ bundle_path }} exec rails db:schema:load"
   run_once: true
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}"
+    chdir: "{{ ansistrano_release_path }}"
   environment:
     RAILS_ENV: production
 
@@ -45,7 +45,7 @@
   command: "{{ bundle_path }} exec rails db:migrate:with_data"
   run_once: true
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}"
+    chdir: "{{ ansistrano_release_path }}"
   environment:
     RAILS_ENV: production
 
@@ -53,4 +53,4 @@
   command: "{{ bundle_path }} exec whenever --update-crontab simple-server --set environment=production"
   run_once: true
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}"
+    chdir: "{{ ansistrano_release_path }}"
