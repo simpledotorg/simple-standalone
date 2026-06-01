@@ -27,7 +27,7 @@
 
 - name: check if schema has been loaded
   shell: |
-    echo "\d+" | PGPASSWORD={{ database.password | quote }} psql -d {{ database_name | quote }} -U {{ database.username | quote }} | grep ar_internal_metadata
+    echo "\d+" | PGPASSWORD={{ database.password | quote }} psql -h {{ groups.postgres_primary | first }} -d {{ database_name | quote }} -U {{ database.username | quote }} | grep ar_internal_metadata
   register: schema_loaded
   ignore_errors: true
   run_once: true
