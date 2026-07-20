@@ -65,6 +65,13 @@
   become: true
   become_user: "{{ deploy_user }}"
 
+- name: clean up stale rbenv shim file
+  file:
+    path: "/home/{{ deploy_user }}/.rbenv/shims/.rbenv-shim"
+    state: absent
+  become: true
+  become_user: "{{ deploy_user }}"
+
 - name: rbenv rehash
   shell: rbenv rehash
   environment:
