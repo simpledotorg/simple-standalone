@@ -132,11 +132,25 @@
   when: postgres_listen_addresses.changed
   become: true
 
+# The provider's NAT drops connections idle for ~20-25 mins, which kills
+# long-running queries like matview refreshes. Keepalives keep them active.
+- name: Set TCP keepalive settings
+  postgresql_set:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items:
+    - { name: tcp_keepalives_idle, value: "60" }
+    - { name: tcp_keepalives_interval, value: "10" }
+    - { name: tcp_keepalives_count, value: "6" }
+  register: postgres_keepalive_settings
+  become: true
+  become_user: postgres
+
 - name: Reload postgresql
   service:
     name: "{{ postgresql_daemon }}"
     state: reloaded
-  when: postgres_hba_conf.changed
+  when: postgres_hba_conf.changed or postgres_keepalive_settings.changed
   become: true
 
 - name: copy .pgpass file
